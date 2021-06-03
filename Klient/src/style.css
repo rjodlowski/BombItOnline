@@ -1,0 +1,45 @@
+body, html {
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+#guiControls {
+	position: absolute;
+	width: 100vw;
+	height: 125px;
+	background-color: rgba(168, 168, 168, 0.7);
+	bottom: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+
+}
+
+#guiControls>div {
+	display: flex;
+	flex-grow: 1;
+	justify-content: flex-start;
+	align-items: baseline;
+	flex-direction: column;
+	height: 100%;
+	/* background-color: green; */
+	/* outline: 1px dashed purple; */
+}
+
+.inputDesc {
+	padding: 10px;
+	float: left;
+	font-size: 20px;
+}
+
+input {
+	margin: 15px;
+}
+
+input[type="checkbox"] {
+    margin: 11px;
+    float: left;
+    width: 20px;
+    height: 20px;
+}
