@@ -1,0 +1,26 @@
+------------ WORK DIVISION --------------
+Rafał:
+	Making game playable for two
+
+Bartek:
+	Find models of:
+		players,
+		bombs,
+		destructable fields,
+	Textures:
+		walls,
+		floor,
+		light (optional - can be a wireframed geometry or invisible)
+
+
+-------------- THOUGHTS------------------
+1) Game creation has to be based on classes
+	easier player moving
+		class objects manipulation (not a string)
+
+2) Player moves are registered every time they step on a new field
+	find out if field index changes 
+		as player crosses the GridHelper's field line
+	player can move freely, smoothly, he doesn't tp between positions
+	animation of moving player played after receiving info from server
+
