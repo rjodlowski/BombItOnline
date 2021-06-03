@@ -11,16 +11,29 @@ Bartek:
 		walls,
 		floor,
 		light (optional - can be a wireframed geometry or invisible)
+	Render player on the board after receiving data from server
 
 
 -------------- THOUGHTS------------------
 1) Game creation has to be based on classes
-	easier player moving
-		class objects manipulation (not a string)
+	- easier player moving
+		class objects manipulation (not a string) -- Preparation done
 
 2) Player moves are registered every time they step on a new field
-	find out if field index changes 
+	- find out if field index changes 
 		as player crosses the GridHelper's field line
-	player can move freely, smoothly, he doesn't tp between positions
-	animation of moving player played after receiving info from server
+	- player can move freely, smoothly, he doesn't tp between positions
+	- animation of moving player played after receiving info from server, 
+		that oppiste player moved (same with bombs)
+
+2b) Players phisically added after they've logged in
+	- returning player string from the server
+	  ^	  based on that string we generate a player in threejs (starting position)
+	  |
+	already done
+
+2c) We can add player info - some rectangle in the corner of a screen
+		showing player details 
+		(mainly name + optionally logout button #uselessExtas)
+
 

@@ -36,6 +36,9 @@ export default class Main {
 			this.game.gameData = JSON.parse(data);
 			this.game.createLevelBasics(true, true)
 			this.game.createLevelLayout();
+			this.game.addPlayer();
+
+			// Try not to add there more pls
 		})
 
 		this.render();
