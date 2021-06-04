@@ -32,8 +32,11 @@ Bartek:
 	  |
 	already done
 
-2c) We can add player info - some rectangle in the corner of a screen
+2c) #optional - We can add player info -> some rectangle in the corner of a screen
 		showing player details 
 		(mainly name + optionally logout button #uselessExtas)
+
+3) ajaxes sent every time player moves to the next field
+	position updated on server
 
 

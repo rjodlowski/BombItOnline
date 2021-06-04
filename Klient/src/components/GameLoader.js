@@ -16,6 +16,7 @@ export default class GameLoader {
 		this.scene = scene;
 		this.gameData = null;
 		this.player = undefined
+		this.bombs = [];
 	}
 
 	getGameData() {
