@@ -5,6 +5,7 @@ import {
 import Renderer from "./Renderer"
 import Camera from "./Camera"
 import GameLoader from "./GameLoader"
+import Player from "./Player"
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
@@ -16,7 +17,8 @@ export default class Main {
 
 		this.camera = new Camera(this.renderer.threeRenderer);
 		let boardCenterVect = new Vector3(5, 0, 5);
-
+		this.player = new Player(this.scene)
+		this.player.position.set(8,0,1)
 		// OrbitControls
 		// this.controls = new OrbitControls(this.camera.threeCamera, this.renderer.threeRenderer.domElement);
 		// this.controls.target = boardCenterVect
