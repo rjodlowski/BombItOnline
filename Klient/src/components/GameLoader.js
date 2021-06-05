@@ -1,5 +1,9 @@
-import { AmbientLight, AxesHelper, GridHelper, Vector3 } from "three"
-
+import {
+	AmbientLight,
+	AxesHelper,
+	GridHelper,
+	Vector3,
+} from "three"
 import Enemy from "./Fields/Enemy.js"
 import Wall from "./Fields/Wall.js"
 import Treasure from "./Fields/Treasure.js"
@@ -11,7 +15,8 @@ export default class GameLoader {
 	constructor(scene) {
 		this.scene = scene;
 		this.gameData = null;
-		// this.camera = camera
+		this.player = undefined
+		this.bombs = [];
 	}
 
 	getGameData() {
@@ -22,7 +27,7 @@ export default class GameLoader {
 			contentType: "json",
 		})
 	}
- 
+
 	createLevelBasics(createGrid = false, createAxes = false) {
 		console.log("Level basics creation");
 		this.planeRotation = Math.PI / 2
@@ -60,15 +65,6 @@ export default class GameLoader {
 		this.lights = []
 		this.treasures = []
 
-		// Generate player location
-		// let avFields = []
-		// for (let x = 0; x < 10; x += 1) {
-		// 	for (let z = 0; z < 10; z++) {
-		// 		if (x == 0 || x == 9 || z == 0 || z == 9)
-		// 			avFields.push(JSON.stringify([x, z]))
-		// 	}
-		// }
-
 		for (let i = 0; i < this.gameData.size; i++) {
 			let currGameObject = this.gameData.fieldList[i]
 
@@ -77,13 +73,6 @@ export default class GameLoader {
 					let wall = new Wall(this.scene);
 					wall.mesh.position.set(currGameObject.x + 0.5, currGameObject.y + 0.5, currGameObject.z + 0.5)
 					this.walls.push(wall)
-
-					// let fieldFromGameObj = [currGameObject.x, currGameObject.z]
-					// let index = avFields.indexOf(JSON.stringify(fieldFromGameObj))
-
-					// if (index > -1) {
-					// 	avFields.splice(index, 1)
-					// }
 					break;
 
 				case "enemy":
@@ -109,13 +98,20 @@ export default class GameLoader {
 					break;
 			}
 		}
+	}
 
-		// if (avFields.length > 0) {
-		// 	this.playerPosition = JSON.parse(avFields[0])
-		// } else {
-		// 	// alert("Nie można dodać gracza - brak miejsca na krawędzi mapy!");
-		// 	console.log("Nie można dodać gracza");
-		// }
-
+	addPlayer() {
+		$.ajax({
+			method: "GET",
+			url: "http://localhost:5000/newPlayer",
+			contentType: "json",
+		}).done((data) => {
+			if (data != "Brak możliwości dodania gracza") {
+				this.player = JSON.parse(data)
+				console.log(this.player);
+			} else {
+				alert(data);
+			}
+		})
 	}
 }
