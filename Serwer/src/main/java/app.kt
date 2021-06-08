@@ -69,7 +69,7 @@ fun newPlayer(req:Request, res: Response):String {
 fun load(req: Request, res: Response):String {
     // Load level
 
-    return testLevelString2
+    return testLevelString
 }
 
 fun playerMove(req:Request, res:Response):String {

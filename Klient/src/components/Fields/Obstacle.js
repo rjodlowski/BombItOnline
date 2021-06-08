@@ -1,7 +1,7 @@
 import {
 	BoxGeometry,
 	Mesh,
-	MeshPhongMaterial,
+	MeshBasicMaterial,
 } from "three";
 
 export default class Obstacle {
@@ -15,18 +15,18 @@ export default class Obstacle {
 
 		switch (this.obstacleType) {
 			case "obstacle1":
-				this.material = new MeshPhongMaterial({
+				this.material = new MeshBasicMaterial({
 					color: 0x00ff00,
 				})
 				break;
 			case "obstacle2":
-				this.material = new MeshPhongMaterial({
+				this.material = new MeshBasicMaterial({
 					color: 0xfff204,
 				})
 				break;
 
 			default:
-				this.material = new MeshPhongMaterial({
+				this.material = new MeshBasicMaterial({
 					color: 0x2904ff,
 				})
 				break;
