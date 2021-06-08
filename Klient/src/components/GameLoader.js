@@ -16,6 +16,7 @@ export default class GameLoader {
 		this.scene = scene;
 		this.gameData = null;
 		this.player = undefined
+		this.playerData = null;
 		this.bombs = [];
 	}
 
@@ -101,17 +102,18 @@ export default class GameLoader {
 	}
 
 	addPlayer() {
-		$.ajax({
+		return $.ajax({
 			method: "GET",
 			url: "http://localhost:5000/newPlayer",
 			contentType: "json",
-		}).done((data) => {
-			if (data != "Brak możliwości dodania gracza") {
-				this.player = JSON.parse(data)
-				console.log(this.player);
-			} else {
-				alert(data);
-			}
 		})
 	}
+
+	materializePlayer() {
+		console.log("PlayerData game");
+		console.log(this.playerData);
+
+		this.player = new Player(this.scene, this.playerData)
+	}
+
 }
