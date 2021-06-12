@@ -7,6 +7,7 @@ import Camera from "./Camera"
 import GameLoader from "./GameLoader"
 import Player from "./Player"
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+import Keyboard from "./Keyboard";
 import KeyboardConfig from "./KeyboardConfig";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
@@ -47,12 +48,13 @@ export default class Main {
 					this.game.gameData.players.push(this.game.playerData);
 
 					this.game.materializePlayer();
+					this.keyboard = new Keyboard(window);
 
 					// Wait for another player to join the game
 					// then create it and start the game
 					this.waitforPlayer();
 				} else {
-					alert(data);
+					// console.log(data);
 				}
 			})
 		})
@@ -64,13 +66,53 @@ export default class Main {
 		this.stats.begin()
 
 		this.renderer.render(this.scene, this.camera.threeCamera);
-		// this.playerMove();
+		this.playerMove();
 
 		this.stats.end();
 
 		requestAnimationFrame(this.render.bind(this));
 	}
 
+	playerMove() {
+		if (this.game.gameStarted) {
+			let playerPos = this.game.player.mesh.position
+			if (KeyboardConfig.moveLeft) {
+				this.game.player.mesh.lookAt(
+					playerPos.x - 10,
+					playerPos.y,
+					playerPos.z
+				);
+				this.game.player.mesh.translateZ(0.02)
+			}
+			if (KeyboardConfig.moveRight) {
+				this.game.player.mesh.lookAt(
+					playerPos.x + 10,
+					playerPos.y,
+					playerPos.z
+				);
+				this.game.player.mesh.translateZ(0.02)
+			}
+			if (KeyboardConfig.moveForward) {
+				this.game.player.mesh.lookAt(
+					playerPos.x,
+					playerPos.y,
+					playerPos.z - 10
+				);
+				this.game.player.mesh.translateZ(0.02)
+			}
+			if (KeyboardConfig.moveBack) {
+				this.game.player.mesh.lookAt(
+					playerPos.x,
+					playerPos.y,
+					playerPos.z + 10
+				);
+				this.game.player.mesh.translateZ(0.02)
+			}
+		}
+		// red - X
+		// green - Y
+		// blue - Z
+	}
 
 	waitforPlayer() {
 		this.playerIndex = this.game.playerData.playerType
@@ -95,7 +137,7 @@ export default class Main {
 					clearInterval(this.checkNextPlayerIn);
 
 					// Start the game 
-					// this.game.startGameRefreshInterval(this.game.gameData)
+					// this.startGameUpdateInterval()
 				}
 			})
 		}, 250);

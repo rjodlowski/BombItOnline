@@ -95,16 +95,16 @@ fun newPlayer(req:Request, res: Response):String {
         val newPlayer = Player(playerId, playerX!!, 0, playerZ!!, playerType)
         playerTable.add(newPlayer)
 
-        if (playerTable.size == 1) {
-            gameBoardTable[playerZ][playerX] = 4
-        } else if (playerTable.size == 2) {
-            gameBoardTable[playerZ][playerX] = 5
-        } else {
-            println("Unidentified player number")
+        when (playerTable.size) {
+            1 -> gameBoardTable[playerZ][playerX] = 4
+            2 -> gameBoardTable[playerZ][playerX] = 5
+            else -> {
+                println("Unidentified player number")
+            }
         }
         level.playerCount = playerTable.size
 
-        printGameBoard()
+//        printGameBoard()
 
         Gson().toJson(newPlayer)
     } else {
@@ -128,33 +128,25 @@ fun load(req: Request, res: Response):String {
 }
 
 fun updateGame(req:Request, res: Response):String {
-
-    return ""
+    return Gson().toJson(gameBoardTable);
 }
 
 fun awaitPlayer(req: Request, res: Response):String {
     val playerIndex:String = req.queryParams("playerIndex");
-//    println(playerIndex);
+    var playerToSearchFor = ""
 
-    var playerToSearchFor = "";
     when (playerIndex) {
         "first" -> playerToSearchFor = "second"
         "second" -> playerToSearchFor = "first"
     }
 
     val playerToReturn = playerTable.find { it.playerType == playerToSearchFor }
-//    println(playerToReturn)
 
     return if (playerTable.size < 2) {
         "Brak drugiego gracza"
     } else {
-        for (i:Int in 0 until playerTable.size) {
-            println(Gson().toJson(playerTable[i]))
-        }
-
         Gson().toJson(playerToReturn)
     }
-
 }
 
 fun playerMove(req:Request, res:Response):String {

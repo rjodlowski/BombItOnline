@@ -124,39 +124,4 @@ export default class GameLoader {
 		this.player = new Player(this.scene, this.playerData)
 	}
 
-	// startGameRefreshInterval(gameData) {
-	// 	// every .5s send an ajax getting the current game state 
-	// 	// both players' positions, destroyed blocks, bombs
-	// 	this.gameStarted = true;
-	// 	console.log(gameData);
-
-	// 	// setInterval(() => {
-	// 	console.log("game update ajax");
-	// 	let dataToSend = gameData.players[0]
-	// 	let dataToSend2 = {
-	// 		size: gameData.players.length,
-	// 		array: gameData.players,
-	// 	}
-
-	// 	console.log(dataToSend2);
-	// 	// console.log(JSON.stringify(dataToSend));
-
-	// 	return $.ajax({
-	// 		method: "GET",
-	// 		url: "http://localhost:5000/update",
-	// 		contentType: "json",
-	// 		data: dataToSend2,
-	// 	}).done((data) => {
-	// 		console.log(data);
-	// 		console.log(JSON.parse(data));
-
-	// 		for (let i = 1; i < 9; i++) {
-	// 			for (let j = 1; j < 9; j++) {
-	// 				// that function is supposed to be in main 
-	// 			}
-	// 		}
-	// 	})
-
-	// 	// }, 500);
-	// }
 }
