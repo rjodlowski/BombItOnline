@@ -16,18 +16,29 @@ export default class Obstacle {
 		switch (this.obstacleType) {
 			case "obstacle1":
 				this.material = new MeshBasicMaterial({
-					color: 0x00ff00,
+					// Red
+					color: 0xff0000,
 				})
 				break;
+
 			case "obstacle2":
 				this.material = new MeshBasicMaterial({
+					// Yellow
 					color: 0xfff204,
+				})
+				break;
+
+			case "obstacle3":
+				this.material = new MeshBasicMaterial({
+					// Blue
+					color: 0x2904ff,
 				})
 				break;
 
 			default:
 				this.material = new MeshBasicMaterial({
-					color: 0x2904ff,
+					// Pink
+					color: 0xe706ff,
 				})
 				break;
 		}

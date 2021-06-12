@@ -2,6 +2,7 @@ import {
 	BoxGeometry,
 	MeshBasicMaterial,
 	Mesh,
+	AxesHelper,
 } from "three";
 
 export default class Player {
@@ -18,6 +19,9 @@ export default class Player {
 			this.playerData.y + 0.5,
 			this.playerData.z + 0.5
 		)
+
+		this.axes = new AxesHelper(3, 3);
+		this.mesh.add(this.axes);
 
 		this.scene.add(this.mesh);
 	}
