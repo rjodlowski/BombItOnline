@@ -1,5 +1,5 @@
 import {
-	MeshBasicMaterial,
+	MeshPhongMaterial,
 	BoxGeometry,
 	Mesh,
 	TextureLoader,
@@ -10,7 +10,7 @@ export default class Enemy {
 	constructor(scene) {
 		this.scene = scene;
 		this.geometry = new BoxGeometry(0.5, 0.5, 0.5);
-		this.material = new MeshBasicMaterial({
+		this.material = new MeshPhongMaterial({
 			// color: 0xfc0303,
 			map: new TextureLoader().load("materials/enemy.jpg")
 		})

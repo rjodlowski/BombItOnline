@@ -1,6 +1,6 @@
 import {
 	IcosahedronGeometry,
-	MeshBasicMaterial,
+	MeshPhongMaterial,
 	Mesh,
 	Vector3,
 } from "three";
@@ -18,7 +18,7 @@ export default class Bomb {
 		this.primeTime = 3 // Seconds before explosion
 
 		this.geometry = new IcosahedronGeometry(0.5, 1);
-		this.material = new MeshBasicMaterial({
+		this.material = new MeshPhongMaterial({
 			color: 0x000000
 		});
 

@@ -1,7 +1,7 @@
 import {
 	BoxGeometry,
 	Mesh,
-	MeshBasicMaterial,
+	MeshPhongMaterial,
 	TextureLoader,
 } from "three";
 
@@ -10,7 +10,7 @@ export default class Wall {
 	constructor(scene) {
 		this.scene = scene;
 		this.geometry = new BoxGeometry(1, 1, 1);
-		this.material = new MeshBasicMaterial({
+		this.material = new MeshPhongMaterial({
 			// color: 0x00ff00,
 			map: new TextureLoader().load("materials/wall.jpg")
 		})

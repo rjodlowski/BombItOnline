@@ -28,8 +28,9 @@ Bartek:
 
 2b) Players phisically added after they've logged in
 	- returning player string from the server
-		based on that string we generate a player in threejs (starting position)
-
+	  ^	  based on that string we generate a player in threejs (starting position)
+	  |
+	already done
 
 2c) #optional - We can add player info -> some rectangle in the corner of a screen
 		showing player details 
@@ -37,15 +38,6 @@ Bartek:
 
 3) ajaxes sent every time player moves to the next field
 	position updated on server
-
-3b) Turn-based or pseudo real itme game (ajaxes updating the game every 0.5s)
-
-3c) After adding a player set an interval updating the game
-	! watch out if it's not heavy on resources (free hosting) !
-		gets positions of all players
-		gets what blocks have been destroyed
-		gets player positions
-
 
 
 4) window with loading circle when u join and u alone (pepposad) before ur enemy join tho

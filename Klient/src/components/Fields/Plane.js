@@ -1,5 +1,5 @@
 import {
-	MeshBasicMaterial,
+	MeshPhongMaterial,
 	Mesh,
 	PlaneGeometry,
 	DoubleSide,
@@ -12,7 +12,7 @@ export default class Plane {
 	constructor(scene) {
 		this.scene = scene;
 		this.geometry = new PlaneGeometry(10, 10);
-		this.material = new MeshBasicMaterial({
+		this.material = new MeshPhongMaterial({
 			// color: 0xa74e50,
 			side: DoubleSide,
 			map: new TextureLoader().load("materials/floor.png")

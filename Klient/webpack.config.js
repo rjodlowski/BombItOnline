@@ -6,7 +6,7 @@ module.exports = {
 		filename: 'bundle.js'
 	},
 	devServer: {
-		port: 5000,
+		port: 8080,
 		contentBase: "./dist/src",
 	},
 	plugins: [
@@ -15,27 +15,16 @@ module.exports = {
 			filename: './index.html',
 			title: "page title",
 			template: './src/index.html',
+			h1: "h1",
+			h2: "h2"
 		})
 	],
 	module: {
 		rules: [
-			// CSS loader
 			{
 				test: /\.css$/,
 				use: ['style-loader', 'css-loader']
-			},
-			// Image loader
-			{
-				test: /\.(png|jp(e*)g|svg)$/,
-				use: [{
-					loader: 'url-loader',
-					options: {
-						limit: 8000, // Convert images < 8kb to base64 strings
-						name: 'images/[hash]-[name].[ext]'
-					}
-				}]
 			}
-
 		]
 	},
 };
