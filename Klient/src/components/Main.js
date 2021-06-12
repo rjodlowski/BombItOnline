@@ -17,8 +17,9 @@ export default class Main {
 
 		this.camera = new Camera(this.renderer.threeRenderer);
 		let boardCenterVect = new Vector3(5, 0, 5);
-		this.player = new Player(this.scene)
-		this.player.position.set(8,0,1)
+		// this.player = new Player(this.scene)
+		// this.player.position.set(8, 0, 1)
+
 		// OrbitControls
 		// this.controls = new OrbitControls(this.camera.threeCamera, this.renderer.threeRenderer.domElement);
 		// this.controls.target = boardCenterVect
@@ -38,9 +39,17 @@ export default class Main {
 			this.game.gameData = JSON.parse(data);
 			this.game.createLevelBasics(true, true)
 			this.game.createLevelLayout();
-			this.game.addPlayer();
 
-			// Try not to add there more pls
+			// Add player to the game
+			this.game.addPlayer().done((data) => {
+				if (data != "Brak możliwości dodania gracza") {
+					this.game.playerData = JSON.parse(data)
+					this.game.materializePlayer();
+
+				} else {
+					alert(data);
+				}
+			})
 		})
 
 		this.render();
