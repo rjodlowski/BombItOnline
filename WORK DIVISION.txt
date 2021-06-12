@@ -11,8 +11,10 @@ Bartek:
 		walls,
 		floor,
 		light (optional - can be a wireframed geometry or invisible)
-	Render player on the board after receiving data from server
-
+	Add models to:
+		- players
+		- bombs
+		- obstacles
 
 -------------- THOUGHTS------------------
 1) Game creation has to be based on classes
