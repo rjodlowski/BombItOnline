@@ -21,6 +21,7 @@ export default class Player {
 		)
 
 		this.axes = new AxesHelper(3, 3);
+		this.axes.position.y += 1;
 		this.mesh.add(this.axes);
 
 		this.scene.add(this.mesh);

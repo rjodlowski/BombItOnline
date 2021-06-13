@@ -6,24 +6,21 @@ import {
 } from "three";
 
 export default class Bomb {
-	constructor(scene, player) {
+	constructor(scene, id, bombPosition) {
 		this.scene = scene;
-		// Player, who spawned the bomb
-		this.player = player
-		// Additional calibration may be required
-		this.playerPosition = new Vector3(this.player.x, 0.5, this.player.z)
-
+		this.bombPosition = bombPosition
+		this.id = id
 		// Bomb parameters
 		this.blastRadius = 2 // Basic value, unless powerups added
 		this.primeTime = 3 // Seconds before explosion
 
-		this.geometry = new IcosahedronGeometry(0.5, 1);
+		this.geometry = new IcosahedronGeometry(0.5, 5);
 		this.material = new MeshBasicMaterial({
 			color: 0x000000
 		});
 
 		this.mesh = new Mesh(this.geometry, this.material);
-		this.mesh.position.set(this.playerPosition);
+		this.mesh.position.set(this.bombPosition);
 
 		this.scene.add(this.mesh)
 	}

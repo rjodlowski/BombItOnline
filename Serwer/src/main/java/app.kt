@@ -17,14 +17,20 @@ var testLevelObj2:Level = Gson().fromJson(testLevelString2, Level::class.java)
 var testLevelString3:String = "{\"size\":94,\"fieldList\":[{\"id\":\"00\",\"x\":0,\"y\":0,\"z\":0,\"type\":\"wall\"},{\"id\":\"01\",\"x\":1,\"y\":0,\"z\":0,\"type\":\"wall\"},{\"id\":\"02\",\"x\":2,\"y\":0,\"z\":0,\"type\":\"wall\"},{\"id\":\"03\",\"x\":3,\"y\":0,\"z\":0,\"type\":\"wall\"},{\"id\":\"04\",\"x\":4,\"y\":0,\"z\":0,\"type\":\"wall\"},{\"id\":\"06\",\"x\":6,\"y\":0,\"z\":0,\"type\":\"wall\"},{\"id\":\"07\",\"x\":7,\"y\":0,\"z\":0,\"type\":\"wall\"},{\"id\":\"05\",\"x\":5,\"y\":0,\"z\":0,\"type\":\"wall\"},{\"id\":\"08\",\"x\":8,\"y\":0,\"z\":0,\"type\":\"wall\"},{\"id\":\"09\",\"x\":9,\"y\":0,\"z\":0,\"type\":\"wall\"},{\"id\":\"19\",\"x\":9,\"y\":0,\"z\":1,\"type\":\"wall\"},{\"id\":\"29\",\"x\":9,\"y\":0,\"z\":2,\"type\":\"wall\"},{\"id\":\"39\",\"x\":9,\"y\":0,\"z\":3,\"type\":\"wall\"},{\"id\":\"49\",\"x\":9,\"y\":0,\"z\":4,\"type\":\"wall\"},{\"id\":\"59\",\"x\":9,\"y\":0,\"z\":5,\"type\":\"wall\"},{\"id\":\"69\",\"x\":9,\"y\":0,\"z\":6,\"type\":\"wall\"},{\"id\":\"79\",\"x\":9,\"y\":0,\"z\":7,\"type\":\"wall\"},{\"id\":\"89\",\"x\":9,\"y\":0,\"z\":8,\"type\":\"wall\"},{\"id\":\"99\",\"x\":9,\"y\":0,\"z\":9,\"type\":\"wall\"},{\"id\":\"98\",\"x\":8,\"y\":0,\"z\":9,\"type\":\"wall\"},{\"id\":\"97\",\"x\":7,\"y\":0,\"z\":9,\"type\":\"wall\"},{\"id\":\"96\",\"x\":6,\"y\":0,\"z\":9,\"type\":\"wall\"},{\"id\":\"95\",\"x\":5,\"y\":0,\"z\":9,\"type\":\"wall\"},{\"id\":\"94\",\"x\":4,\"y\":0,\"z\":9,\"type\":\"wall\"},{\"id\":\"93\",\"x\":3,\"y\":0,\"z\":9,\"type\":\"wall\"},{\"id\":\"92\",\"x\":2,\"y\":0,\"z\":9,\"type\":\"wall\"},{\"id\":\"91\",\"x\":1,\"y\":0,\"z\":9,\"type\":\"wall\"},{\"id\":\"90\",\"x\":0,\"y\":0,\"z\":9,\"type\":\"wall\"},{\"id\":\"80\",\"x\":0,\"y\":0,\"z\":8,\"type\":\"wall\"},{\"id\":\"70\",\"x\":0,\"y\":0,\"z\":7,\"type\":\"wall\"},{\"id\":\"60\",\"x\":0,\"y\":0,\"z\":6,\"type\":\"wall\"},{\"id\":\"50\",\"x\":0,\"y\":0,\"z\":5,\"type\":\"wall\"},{\"id\":\"40\",\"x\":0,\"y\":0,\"z\":4,\"type\":\"wall\"},{\"id\":\"30\",\"x\":0,\"y\":0,\"z\":3,\"type\":\"wall\"},{\"id\":\"20\",\"x\":0,\"y\":0,\"z\":2,\"type\":\"wall\"},{\"id\":\"10\",\"x\":0,\"y\":0,\"z\":1,\"type\":\"wall\"},{\"id\":\"22\",\"x\":2,\"y\":0,\"z\":2,\"type\":\"wall\"},{\"id\":\"32\",\"x\":2,\"y\":0,\"z\":3,\"type\":\"wall\"},{\"id\":\"14\",\"x\":4,\"y\":0,\"z\":1,\"type\":\"wall\"},{\"id\":\"24\",\"x\":4,\"y\":0,\"z\":2,\"type\":\"wall\"},{\"id\":\"44\",\"x\":4,\"y\":0,\"z\":4,\"type\":\"wall\"},{\"id\":\"55\",\"x\":5,\"y\":0,\"z\":5,\"type\":\"wall\"},{\"id\":\"75\",\"x\":5,\"y\":0,\"z\":7,\"type\":\"wall\"},{\"id\":\"85\",\"x\":5,\"y\":0,\"z\":8,\"type\":\"wall\"},{\"id\":\"77\",\"x\":7,\"y\":0,\"z\":7,\"type\":\"wall\"},{\"id\":\"67\",\"x\":7,\"y\":0,\"z\":6,\"type\":\"wall\"},{\"id\":\"47\",\"x\":7,\"y\":0,\"z\":4,\"type\":\"wall\"},{\"id\":\"36\",\"x\":6,\"y\":0,\"z\":3,\"type\":\"wall\"},{\"id\":\"27\",\"x\":7,\"y\":0,\"z\":2,\"type\":\"wall\"},{\"id\":\"26\",\"x\":6,\"y\":0,\"z\":2,\"type\":\"wall\"},{\"id\":\"73\",\"x\":3,\"y\":0,\"z\":7,\"type\":\"wall\"},{\"id\":\"72\",\"x\":2,\"y\":0,\"z\":7,\"type\":\"wall\"},{\"id\":\"63\",\"x\":3,\"y\":0,\"z\":6,\"type\":\"wall\"},{\"id\":\"52\",\"x\":2,\"y\":0,\"z\":5,\"type\":\"wall\"},{\"id\":\"61\",\"x\":1,\"y\":0,\"z\":6,\"type\":\"treasure\"},{\"id\":\"83\",\"x\":3,\"y\":0,\"z\":8,\"type\":\"treasure\"},{\"id\":\"84\",\"x\":4,\"y\":0,\"z\":8,\"type\":\"treasure\"},{\"id\":\"74\",\"x\":4,\"y\":0,\"z\":7,\"type\":\"treasure\"},{\"id\":\"64\",\"x\":4,\"y\":0,\"z\":6,\"type\":\"treasure\"},{\"id\":\"65\",\"x\":5,\"y\":0,\"z\":6,\"type\":\"treasure\"},{\"id\":\"66\",\"x\":6,\"y\":0,\"z\":6,\"type\":\"treasure\"},{\"id\":\"76\",\"x\":6,\"y\":0,\"z\":7,\"type\":\"treasure\"},{\"id\":\"86\",\"x\":6,\"y\":0,\"z\":8,\"type\":\"treasure\"},{\"id\":\"87\",\"x\":7,\"y\":0,\"z\":8,\"type\":\"treasure\"},{\"id\":\"88\",\"x\":8,\"y\":0,\"z\":8,\"type\":\"treasure\"},{\"id\":\"78\",\"x\":8,\"y\":0,\"z\":7,\"type\":\"treasure\"},{\"id\":\"68\",\"x\":8,\"y\":0,\"z\":6,\"type\":\"treasure\"},{\"id\":\"58\",\"x\":8,\"y\":0,\"z\":5,\"type\":\"treasure\"},{\"id\":\"57\",\"x\":7,\"y\":0,\"z\":5,\"type\":\"treasure\"},{\"id\":\"56\",\"x\":6,\"y\":0,\"z\":5,\"type\":\"treasure\"},{\"id\":\"46\",\"x\":6,\"y\":0,\"z\":4,\"type\":\"treasure\"},{\"id\":\"45\",\"x\":5,\"y\":0,\"z\":4,\"type\":\"treasure\"},{\"id\":\"35\",\"x\":5,\"y\":0,\"z\":3,\"type\":\"treasure\"},{\"id\":\"25\",\"x\":5,\"y\":0,\"z\":2,\"type\":\"treasure\"},{\"id\":\"15\",\"x\":5,\"y\":0,\"z\":1,\"type\":\"treasure\"},{\"id\":\"16\",\"x\":6,\"y\":0,\"z\":1,\"type\":\"treasure\"},{\"id\":\"38\",\"x\":8,\"y\":0,\"z\":3,\"type\":\"treasure\"},{\"id\":\"37\",\"x\":7,\"y\":0,\"z\":3,\"type\":\"treasure\"},{\"id\":\"48\",\"x\":8,\"y\":0,\"z\":4,\"type\":\"treasure\"},{\"id\":\"54\",\"x\":4,\"y\":0,\"z\":5,\"type\":\"treasure\"},{\"id\":\"53\",\"x\":3,\"y\":0,\"z\":5,\"type\":\"treasure\"},{\"id\":\"43\",\"x\":3,\"y\":0,\"z\":4,\"type\":\"treasure\"},{\"id\":\"42\",\"x\":2,\"y\":0,\"z\":4,\"type\":\"treasure\"},{\"id\":\"41\",\"x\":1,\"y\":0,\"z\":4,\"type\":\"treasure\"},{\"id\":\"51\",\"x\":1,\"y\":0,\"z\":5,\"type\":\"treasure\"},{\"id\":\"31\",\"x\":1,\"y\":0,\"z\":3,\"type\":\"treasure\"},{\"id\":\"21\",\"x\":1,\"y\":0,\"z\":2,\"type\":\"treasure\"},{\"id\":\"11\",\"x\":1,\"y\":0,\"z\":1,\"type\":\"treasure\"},{\"id\":\"12\",\"x\":2,\"y\":0,\"z\":1,\"type\":\"treasure\"},{\"id\":\"13\",\"x\":3,\"y\":0,\"z\":1,\"type\":\"treasure\"},{\"id\":\"23\",\"x\":3,\"y\":0,\"z\":2,\"type\":\"treasure\"},{\"id\":\"33\",\"x\":3,\"y\":0,\"z\":3,\"type\":\"treasure\"},{\"id\":\"34\",\"x\":4,\"y\":0,\"z\":3,\"type\":\"treasure\"},{\"id\":\"62\",\"x\":2,\"y\":0,\"z\":6,\"type\":\"treasure\"}]}"
 var testLevelObj3:Level = Gson().fromJson(testLevelString3, Level::class.java)
 
-
 val gameBoardTable:MutableList<MutableList<Int>> = mutableListOf();
 // 0 - empty field
+const val eFieldIndex:Int = 0;
 // 1 - indestructible wall
+const val inWallIndex:Int = 1;
 // 2 - obstacle
+const val obstacleIndex:Int = 2
 // 3 - bomb
+const val bombIndex:Int = 3
 // 4 - player 1
+const val firstPlayerIndex:Int = 4;
 // 5 - player 2
+const val secondPlayerIndex:Int = 5;
+
 
 fun main(args: Array<String>) {
     staticFiles.location("/public")
@@ -37,6 +43,7 @@ fun main(args: Array<String>) {
     get("/load") { req, res -> load(req, res) }
     get("/newPlayer") {req, res -> newPlayer(req, res)}
     get("/awaitPlayer") {req, res -> awaitPlayer(req, res)}
+    get("/playerMove") {req, res -> playerMove(req, res)}
     get("/update") { req, res -> updateGame(req, res)}
 
     after("*") {
@@ -49,7 +56,7 @@ fun createGameBoard() {
         val gameSubRow = mutableListOf<Int>()
 
         for (j in 0 until 10) {
-            gameSubRow.add(0)
+            gameSubRow.add(eFieldIndex)
         }
         gameBoardTable.add(gameSubRow)
     }
@@ -96,8 +103,8 @@ fun newPlayer(req:Request, res: Response):String {
         playerTable.add(newPlayer)
 
         when (playerTable.size) {
-            1 -> gameBoardTable[playerZ][playerX] = 4
-            2 -> gameBoardTable[playerZ][playerX] = 5
+            1 -> gameBoardTable[playerZ][playerX] = firstPlayerIndex
+            2 -> gameBoardTable[playerZ][playerX] = secondPlayerIndex
             else -> {
                 println("Unidentified player number")
             }
@@ -120,8 +127,8 @@ fun load(req: Request, res: Response):String {
         val z = field.z
 
         when (field.type) {
-            "wall" -> gameBoardTable[z][x] = 1
-            "treasure" -> gameBoardTable[z][x] = 2
+            "wall" -> gameBoardTable[z][x] = inWallIndex
+            "treasure" -> gameBoardTable[z][x] = obstacleIndex
         }
     }
     return testLevelString3
@@ -151,8 +158,29 @@ fun awaitPlayer(req: Request, res: Response):String {
 
 fun playerMove(req:Request, res:Response):String {
     // Player moves by one field, not constant position changes
+    val playerType:String = req.queryParams("playerType");
+    val playerX:Int = req.queryParams("playerX").toInt();
+    val playerZ:Int = req.queryParams("playerZ").toInt();
 
-    return ""
+    for (z:Int in 0 until gameBoardTable.size) {
+        for (x:Int in 0 until gameBoardTable.size) {
+            if (playerType == "first") {
+                if (gameBoardTable[z][x] == firstPlayerIndex) {
+                    gameBoardTable[z][x] = eFieldIndex
+                    gameBoardTable[playerZ][playerX] = firstPlayerIndex
+                    break;
+                }
+            } else if (playerType == "second") {
+                if (gameBoardTable[z][x] == secondPlayerIndex) {
+                    gameBoardTable[z][x] = eFieldIndex
+                    gameBoardTable[playerZ][playerX] = secondPlayerIndex
+                    break;
+                }
+            }
+        }
+    }
+
+    return "Position update successful!"
 }
 
 

@@ -6,6 +6,7 @@ import Renderer from "./Renderer"
 import Camera from "./Camera"
 import GameLoader from "./GameLoader"
 import Player from "./Player"
+import Bomb from "./Fields/Bomb";
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import Keyboard from "./Keyboard";
 import KeyboardConfig from "./KeyboardConfig";
@@ -67,6 +68,7 @@ export default class Main {
 
 		this.renderer.render(this.scene, this.camera.threeCamera);
 		this.playerMove();
+		this.checkPlayerMove();
 
 		this.stats.end();
 
@@ -74,6 +76,8 @@ export default class Main {
 	}
 
 	playerMove() {
+		// Enables player movement
+
 		if (this.game.gameStarted) {
 			let playerPos = this.game.player.mesh.position
 			if (KeyboardConfig.moveLeft) {
@@ -114,7 +118,39 @@ export default class Main {
 		// blue - Z
 	}
 
+	checkPlayerMove() {
+		// Detects when local player's position changes and updates it on the server
+
+		if (this.game.gameStarted) {
+			let playerPos = this.game.player.mesh.position;
+
+			if (
+				Math.floor(playerPos.x) != this.game.player.playerData.x ||
+				Math.floor(playerPos.z) != this.game.player.playerData.z
+			) {
+				this.game.player.playerData.x = Math.floor(this.game.player.mesh.position.x)
+				this.game.player.playerData.z = Math.floor(this.game.player.mesh.position.z)
+
+				$.ajax({
+					method: "GET",
+					url: "http://localhost:5000/playerMove",
+					contentType: "json",
+					data: {
+						playerType: this.game.player.playerData.playerType,
+						playerX: this.game.player.playerData.x,
+						playerZ: this.game.player.playerData.z,
+					}
+				}).done((data) => {
+					console.log(data);
+				})
+			}
+		}
+	}
+
 	waitforPlayer() {
+		// Awaits for next player to join the game
+		// When next player joins, starts the game
+
 		this.playerIndex = this.game.playerData.playerType
 
 		this.checkNextPlayerIn = setInterval(() => {
@@ -137,9 +173,96 @@ export default class Main {
 					clearInterval(this.checkNextPlayerIn);
 
 					// Start the game 
-					// this.startGameUpdateInterval()
+					this.startGameUpdateInterval()
 				}
 			})
-		}, 250);
+		}, 500);
 	}
+
+	startGameUpdateInterval() {
+		// Starts game update interval
+
+		this.game.gameStarted = true;
+		console.log(this.game.gameTable);
+
+		this.gameUpdateInterval = setInterval(() => {
+			console.log("game update ajax");
+
+			$.ajax({
+				method: "GET",
+				url: "http://localhost:5000/update",
+			}).done((data) => {
+				this.game.gameTable = JSON.parse(data);
+				this.updateGame();
+			})
+
+		}, 500);
+	}
+
+	updateGame() {
+		// Updates game state based on a table from server
+
+		// console.log(this.game.gameTable);
+
+		for (let z = 1; z < 9; z++) {
+			for (let x = 1; x < 9; x++) {
+				let fieldType = this.game.gameTable[z][x]
+
+				switch (fieldType) {
+					case 0:
+						// Ignore - empty field
+						break;
+
+					case 1:
+						// Ignore - Indestructible wall
+						break;
+
+					case 2:
+						// Ignore - Obstacle
+						break;
+
+					case 3:
+						// Bomb
+						this.game.bombs.push(new Bomb(this.scene, this.game.bombId, new Vector3(
+							x + 0.5,
+							0.5,
+							z + 0.5
+						)))
+						this.game.bombId++;
+						break;
+
+					case 4:
+						// Player 1
+						if (this.game.player.playerData.playerType != "first") {
+							this.game.enemyPlayer.mesh.position.set(
+								x + 0.5,
+								0.5,
+								z + 0.5
+							)
+						}
+
+						break;
+
+					case 5:
+						// Player 2
+						if (this.game.player.playerData.playerType != "second") {
+							this.game.enemyPlayer.mesh.position.set(
+								x + 0.5,
+								0.5,
+								z + 0.5
+							)
+						}
+
+						break;
+
+					default:
+						console.log("Unknown field");
+						break;
+				}
+			}
+		}
+	}
+
+
+
 }

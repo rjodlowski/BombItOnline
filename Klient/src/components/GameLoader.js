@@ -19,6 +19,7 @@ export default class GameLoader {
 		this.player = undefined
 		this.playerData = null;
 		this.bombs = [];
+		this.bombId = 0;
 		this.gameStarted = false;
 		this.gameTable = [];
 		this.enemyPlayerData = null;
@@ -27,6 +28,7 @@ export default class GameLoader {
 
 	getGameData() {
 		// Gets saved game data from server
+
 		return $.ajax({
 			method: "GET",
 			url: "http://localhost:5000/load",
@@ -35,10 +37,11 @@ export default class GameLoader {
 	}
 
 	createLevelBasics(createGrid = false, createAxes = false) {
+		// Creates basic level layout
+
 		console.log("Level basics creation");
 		this.planeRotation = Math.PI / 2
 
-		// Creates:
 		// - floor
 		this.floor = new Plane(this.scene)
 		this.floor.mesh.position.set(5, 0, 5);
@@ -62,9 +65,10 @@ export default class GameLoader {
 	}
 
 	createLevelLayout() {
+		// Creates all level blocks based on data from server
+
 		console.log("Level content creation, whole game data: ");
 		console.log(this.gameData);
-		// Creates all level blocks based on data from server (/load)
 
 		this.walls = []
 		this.enemies = []
@@ -110,6 +114,8 @@ export default class GameLoader {
 	}
 
 	addPlayer() {
+		// Adds player to the game on the server
+
 		return $.ajax({
 			method: "GET",
 			url: "http://localhost:5000/newPlayer",
@@ -118,10 +124,17 @@ export default class GameLoader {
 	}
 
 	materializePlayer() {
+		// Physically renders player in the game
+
 		console.log("PlayerData game");
 		console.log(this.playerData);
 
 		this.player = new Player(this.scene, this.playerData)
+		this.playerX = this.player.mesh.position.x
+		this.playerZ = this.player.mesh.position.z
+
+		console.log("Actual player positon");
+		console.log(this.playerX, this.playerZ);
 	}
 
 }
