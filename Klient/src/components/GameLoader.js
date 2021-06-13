@@ -39,7 +39,6 @@ export default class GameLoader {
 	createLevelBasics(createGrid = false, createAxes = false) {
 		// Creates basic level layout
 
-		console.log("Level basics creation");
 		this.planeRotation = Math.PI / 2
 
 		// - floor
@@ -132,9 +131,6 @@ export default class GameLoader {
 		this.player = new Player(this.scene, this.playerData)
 		this.playerX = this.player.mesh.position.x
 		this.playerZ = this.player.mesh.position.z
-
-		console.log("Actual player positon");
-		console.log(this.playerX, this.playerZ);
 	}
 
 }

@@ -12,7 +12,7 @@ export default class Bomb {
 		this.id = id
 		// Bomb parameters
 		this.blastRadius = 2 // Basic value, unless powerups added
-		this.primeTime = 3 // Seconds before explosion
+		this.primeTime = 5 // Seconds before explosion
 
 		this.geometry = new IcosahedronGeometry(0.5, 5);
 		this.material = new MeshBasicMaterial({
@@ -20,7 +20,10 @@ export default class Bomb {
 		});
 
 		this.mesh = new Mesh(this.geometry, this.material);
-		this.mesh.position.set(this.bombPosition);
+		this.mesh.position.set(
+			this.bombPosition.x + 0.5,
+			this.bombPosition.y + 0.5,
+			this.bombPosition.z + 0.5);
 
 		this.scene.add(this.mesh)
 	}

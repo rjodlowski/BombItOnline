@@ -12,6 +12,13 @@ Bartek:
 		floor,
 		light (optional - can be a wireframed geometry or invisible)
 	Render player on the board after receiving data from server
+	Collisions - player collides with:
+		- indestructible walls
+		- obstacles
+		- bombs from outside
+			player places a bomb, which spawns on top of him
+			he can then walk away from that field (which has a player and a bomb on it)
+			but he can not come back into the field, where a bomb is (walk inside the bomb)
 
 
 -------------- THOUGHTS------------------

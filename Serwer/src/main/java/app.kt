@@ -31,6 +31,10 @@ const val firstPlayerIndex:Int = 4;
 // 5 - player 2
 const val secondPlayerIndex:Int = 5;
 
+var firstPlayerPlacedBomb:Boolean = false
+var firstPlayerMoveAfterBomb = false;
+var secondPlayerPlacedBomb:Boolean = false
+var secondPlayerMoveAfterBomb = false;
 
 fun main(args: Array<String>) {
     staticFiles.location("/public")
@@ -41,10 +45,11 @@ fun main(args: Array<String>) {
     get("/") { _, res -> res.redirect("index.html") }
 
     get("/load") { req, res -> load(req, res) }
+    get("/update") { req, res -> updateGame(req, res)}
     get("/newPlayer") {req, res -> newPlayer(req, res)}
     get("/awaitPlayer") {req, res -> awaitPlayer(req, res)}
     get("/playerMove") {req, res -> playerMove(req, res)}
-    get("/update") { req, res -> updateGame(req, res)}
+    get("/placeBomb") {req, res -> placeBomb(req, res)}
 
     after("*") {
         req, res -> {res.header("Access-Control-Allow-Origin", "*")}
@@ -165,23 +170,58 @@ fun playerMove(req:Request, res:Response):String {
     for (z:Int in 0 until gameBoardTable.size) {
         for (x:Int in 0 until gameBoardTable.size) {
             if (playerType == "first") {
-                if (gameBoardTable[z][x] == firstPlayerIndex) {
+                if (gameBoardTable[z][x] == firstPlayerIndex || (firstPlayerPlacedBomb && firstPlayerMoveAfterBomb)) {
                     gameBoardTable[z][x] = eFieldIndex
                     gameBoardTable[playerZ][playerX] = firstPlayerIndex
+                    firstPlayerMoveAfterBomb = false;
                     break;
                 }
             } else if (playerType == "second") {
-                if (gameBoardTable[z][x] == secondPlayerIndex) {
+                if (gameBoardTable[z][x] == secondPlayerIndex || (secondPlayerPlacedBomb && secondPlayerMoveAfterBomb)) {
                     gameBoardTable[z][x] = eFieldIndex
                     gameBoardTable[playerZ][playerX] = secondPlayerIndex
+                    secondPlayerMoveAfterBomb = false;
                     break;
                 }
             }
         }
     }
 
-    return "Position update successful!"
+    // Target return
+//    return "Position update successful!"
+
+    // Test return
+    return Gson().toJson(gameBoardTable);
 }
 
+fun placeBomb(req: Request, res: Response):String {
+    val playerType:String = req.queryParams("playerType");
+    val bombZ:Int = req.queryParams("positionZ").toInt();
+    val bombX:Int = req.queryParams("positionX").toInt();
+
+    when (playerType) {
+        "first" -> {
+            if (!firstPlayerPlacedBomb) {
+                firstPlayerPlacedBomb = true
+                firstPlayerMoveAfterBomb = true;
+                gameBoardTable[bombZ][bombX] = bombIndex;
+            }
+        }
+        "second" -> {
+            if (!secondPlayerPlacedBomb) {
+                secondPlayerPlacedBomb = true
+                secondPlayerMoveAfterBomb = true;
+                gameBoardTable[bombZ][bombX] = bombIndex;
+            }
+        }
+    }
+
+
+    // Target return
+//    return "Dodano bombę!"
+
+    // Test return
+    return Gson().toJson(gameBoardTable);
+}
 
 

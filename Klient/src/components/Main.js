@@ -141,7 +141,8 @@ export default class Main {
 						playerZ: this.game.player.playerData.z,
 					}
 				}).done((data) => {
-					console.log(data);
+					console.log("Position update successful!");
+					console.log(JSON.parse(data));
 				})
 			}
 		}
@@ -169,6 +170,7 @@ export default class Main {
 					console.log(JSON.parse(data));
 					this.game.enemyPlayerData = JSON.parse(data);
 					this.game.enemyPlayer = new Player(this.scene, this.game.enemyPlayerData)
+					this.addPlayerActions()
 
 					clearInterval(this.checkNextPlayerIn);
 
@@ -183,7 +185,6 @@ export default class Main {
 		// Starts game update interval
 
 		this.game.gameStarted = true;
-		console.log(this.game.gameTable);
 
 		this.gameUpdateInterval = setInterval(() => {
 			console.log("game update ajax");
@@ -201,8 +202,6 @@ export default class Main {
 
 	updateGame() {
 		// Updates game state based on a table from server
-
-		// console.log(this.game.gameTable);
 
 		for (let z = 1; z < 9; z++) {
 			for (let x = 1; x < 9; x++) {
@@ -223,12 +222,15 @@ export default class Main {
 
 					case 3:
 						// Bomb
-						this.game.bombs.push(new Bomb(this.scene, this.game.bombId, new Vector3(
-							x + 0.5,
-							0.5,
-							z + 0.5
-						)))
-						this.game.bombId++;
+
+						// if no bomb on this position in game  
+						if (this.game.bombs.findIndex(e => e.bombPosition.equals(new Vector3(x, 0, z))) == -1) {
+							let bomb = new Bomb(this.scene, this.game.bombId, new Vector3(x, 0, z))
+							this.game.bombs.push(bomb);
+							this.game.bombId++;
+							console.log("Bomb placed ingame");
+							console.log(this.game.bombs);
+						}
 						break;
 
 					case 4:
@@ -263,6 +265,37 @@ export default class Main {
 		}
 	}
 
+	addPlayerActions() {
+		// Adds an ability for the local player to place bombs - that's it for now
 
+		window.onkeydown = (key) => {
+			if (key.which == 32) {
+				console.log("Space clicked");
+
+				let playerWhoPlacedBombFound = this.game.bombs.findIndex(x => x.playerType === this.game.player.playerData.playerType)
+				console.log(this.game.player.playerData.playerType);
+				console.log(playerWhoPlacedBombFound);
+
+				if (playerWhoPlacedBombFound == -1) {
+					$.ajax({
+						method: "GET",
+						url: "http://localhost:5000/placeBomb",
+						contentType: "json",
+						data: {
+							playerType: this.game.player.playerData.playerType,
+							positionX: Math.floor(this.game.player.mesh.position.x),
+							positionZ: Math.floor(this.game.player.mesh.position.z)
+						}
+					}).done((data) => {
+						// Target log
+						// console.log(data);
+
+						// Test log
+						console.log(JSON.parse(data));
+					})
+				}
+			}
+		}
+	}
 
 }
