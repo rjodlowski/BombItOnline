@@ -10,6 +10,7 @@ export default class Player {
 	constructor(scene, playerData) {
 		this.scene = scene;
 		this.playerData = playerData
+		this.name = "player";
 
 		this.geometry = new BoxGeometry(0.5, 0.5, 0.5)
 		this.material = new MeshBasicMaterial({ color: 0x21ff15 })
@@ -19,6 +20,8 @@ export default class Player {
 			this.playerData.y + 0.5,
 			this.playerData.z + 0.5
 		)
+		this.mesh.name = this.name;
+		this.mesh.playerType = this.playerData.playerType;
 
 		this.axes = new AxesHelper(3, 3);
 		this.axes.position.y += 1;

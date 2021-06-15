@@ -10,6 +10,7 @@ export default class Obstacle {
 		this.scene = scene;
 		// Variety of obstacles 
 		this.obstacleType = obstacleType
+		this.name = "obstacle";
 
 		this.geometry = new BoxGeometry(0.8, 0.8, 0.8);
 
@@ -44,7 +45,7 @@ export default class Obstacle {
 		}
 
 		this.mesh = new Mesh(this.geometry, this.material);
-		this.mesh.castShadow = true;
+		this.mesh.name = this.name;
 
 		this.scene.add(this.mesh)
 	}

@@ -56,6 +56,8 @@ fun main(args: Array<String>) {
     get("/playerMove") {req, res -> playerMove(req, res)}
     get("/placeBomb") {req, res -> placeBomb(req, res)}
     get("/bombExplosion") {req, res -> bombExplosion(req, res)}
+    get("/destroyObstacle") {req, res -> destroyObstacle(req, res)}
+    get("/destroyPlayer") {req, res -> destroyPlayer(req, res)}
 
     after("*") {
         req, res -> {res.header("Access-Control-Allow-Origin", "*")}
@@ -199,10 +201,10 @@ fun playerMove(req:Request, res:Response):String {
     }
 
     // Target return
-//    return "Position update successful!"
+    return "Position update successful!"
 
     // Test return
-    return Gson().toJson(gameBoardTable);
+//    return Gson().toJson(gameBoardTable);
 }
 
 fun placeBomb(req: Request, res: Response):String {
@@ -234,11 +236,11 @@ fun placeBomb(req: Request, res: Response):String {
     }
 
 
-    // Target return
-//    return "Dodano bombę!"
+//     Target return
+    return "Dodano bombę!"
 
     // Test return
-    return Gson().toJson(gameBoardTable);
+//    return Gson().toJson(gameBoardTable);
 }
 
 fun bombExplosion(req: Request, res: Response):String {
@@ -261,6 +263,43 @@ fun bombExplosion(req: Request, res: Response):String {
     }
 
     return "Bomb exploded";
+}
+
+fun destroyObstacle (req:Request, res: Response):String {
+    val obstacleX:Int = req.queryParams("x").toInt()
+    val obstacleZ:Int = req.queryParams("z").toInt()
+
+    gameBoardTable[obstacleZ][obstacleX] = eFieldIndex;
+    println("Obstacle destroyed")
+
+    return "Obstacle destroyed";
+}
+
+fun destroyPlayer(req: Request, res: Response):String {
+    println("Player destroyed")
+    val playerType:String = req.queryParams("playerType");
+    val playerX:Int = req.queryParams("x").toInt()
+    val playerZ:Int = req.queryParams("z").toInt()
+
+    // Remove him from gameBoard
+    gameBoardTable[playerZ][playerX] = eFieldIndex;
+    printGameBoard();
+
+    // Remove player from player table
+    val playerFound:Player? = playerTable.find { it.playerType == playerType }
+    playerTable.remove(playerFound)
+
+    println("Player table:")
+    for (i:Int in 0 until playerTable.size) {
+        println(Gson().toJson(playerTable[i]))
+    }
+
+    // Send info to client with winning player
+    return if (playerFound != null) {
+        "No player to delete"
+    } else {
+        Gson().toJson(playerFound);
+    }
 }
 
 

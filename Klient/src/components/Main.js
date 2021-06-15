@@ -143,8 +143,9 @@ export default class Main {
 						playerZ: this.game.player.playerData.z,
 					}
 				}).done((data) => {
-					console.log("Position update successful!");
-					console.log(JSON.parse(data));
+					// console.log("Position update successful!");
+					console.log(data);
+					// console.log(JSON.parse(data));
 				})
 			}
 		}
@@ -310,10 +311,10 @@ export default class Main {
 						}
 					}).done((data) => {
 						// Target log
-						// console.log(data);
+						console.log(data);
 
 						// Test log
-						console.log(JSON.parse(data));
+						// console.log(JSON.parse(data));
 					})
 				}
 			}
