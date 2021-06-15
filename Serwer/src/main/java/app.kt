@@ -31,10 +31,15 @@ const val firstPlayerIndex:Int = 4;
 // 5 - player 2
 const val secondPlayerIndex:Int = 5;
 
+// Bomb placement
 var firstPlayerPlacedBomb:Boolean = false
 var firstPlayerMoveAfterBomb = false;
+var firstPlayerBombCords:MutableList<Int> = mutableListOf();
+
 var secondPlayerPlacedBomb:Boolean = false
 var secondPlayerMoveAfterBomb = false;
+var secondPlayerBombCords:MutableList<Int> = mutableListOf();
+
 
 fun main(args: Array<String>) {
     staticFiles.location("/public")
@@ -50,6 +55,7 @@ fun main(args: Array<String>) {
     get("/awaitPlayer") {req, res -> awaitPlayer(req, res)}
     get("/playerMove") {req, res -> playerMove(req, res)}
     get("/placeBomb") {req, res -> placeBomb(req, res)}
+    get("/bombExplosion") {req, res -> bombExplosion(req, res)}
 
     after("*") {
         req, res -> {res.header("Access-Control-Allow-Origin", "*")}
@@ -65,6 +71,11 @@ fun createGameBoard() {
         }
         gameBoardTable.add(gameSubRow)
     }
+
+    firstPlayerBombCords.add(0)
+    firstPlayerBombCords.add(0)
+    secondPlayerBombCords.add(0)
+    secondPlayerBombCords.add(0)
 }
 
 fun printGameBoard() {
@@ -205,6 +216,9 @@ fun placeBomb(req: Request, res: Response):String {
                 firstPlayerPlacedBomb = true
                 firstPlayerMoveAfterBomb = true;
                 gameBoardTable[bombZ][bombX] = bombIndex;
+
+                firstPlayerBombCords[0] = bombZ
+                firstPlayerBombCords[1] = bombX
             }
         }
         "second" -> {
@@ -212,6 +226,9 @@ fun placeBomb(req: Request, res: Response):String {
                 secondPlayerPlacedBomb = true
                 secondPlayerMoveAfterBomb = true;
                 gameBoardTable[bombZ][bombX] = bombIndex;
+
+                secondPlayerBombCords[0] = bombZ
+                secondPlayerBombCords[1] = bombX
             }
         }
     }
@@ -222,6 +239,28 @@ fun placeBomb(req: Request, res: Response):String {
 
     // Test return
     return Gson().toJson(gameBoardTable);
+}
+
+fun bombExplosion(req: Request, res: Response):String {
+    val bombX:Int =  req.queryParams("x").toInt();
+    val bombZ:Int =  req.queryParams("z").toInt();
+
+    gameBoardTable[bombZ][bombX] = eFieldIndex;
+
+    if (firstPlayerBombCords[0] == bombZ && firstPlayerBombCords[1] == bombX) {
+        firstPlayerPlacedBomb = false;
+
+        firstPlayerBombCords[0] = 0
+        firstPlayerBombCords[1] = 0
+
+    } else if (secondPlayerBombCords[0] == bombZ && secondPlayerBombCords[1] == bombX) {
+        secondPlayerPlacedBomb = false;
+
+        secondPlayerBombCords[0] = 0
+        secondPlayerBombCords[1] = 0
+    }
+
+    return "Bomb exploded";
 }
 
 

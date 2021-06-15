@@ -69,12 +69,14 @@ export default class Main {
 		this.renderer.render(this.scene, this.camera.threeCamera);
 		this.playerMove();
 		this.checkPlayerMove();
+		this.bombsUpdate();
 
 		this.stats.end();
 
 		requestAnimationFrame(this.render.bind(this));
 	}
 
+	//#region Render functions
 	playerMove() {
 		// Enables player movement
 
@@ -148,6 +150,26 @@ export default class Main {
 		}
 	}
 
+	bombsUpdate() {
+		// Bombs update - growing and explosion
+		if (this.game.gameStarted) {
+			if (this.game.bombs.length > 0) {
+				for (let i = 0; i < this.game.bombs.length; i++) {
+					if (this.game.bombs[i].timePrimed < this.game.bombs[i].primeTime) {
+						this.game.bombs[i].grow()
+					} else {
+						console.log(this.game.bombs);
+						this.game.bombs[i].explode();
+						this.game.bombs.splice(i, 1);
+						console.log(this.game.bombs);
+					}
+				}
+			}
+		}
+	}
+	//#endregion End of render functions
+
+	//#region Other game functions
 	waitforPlayer() {
 		// Awaits for next player to join the game
 		// When next player joins, starts the game
@@ -297,5 +319,5 @@ export default class Main {
 			}
 		}
 	}
-
+	//#endregion End of other game functions
 }
