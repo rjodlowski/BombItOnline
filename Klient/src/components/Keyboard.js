@@ -71,4 +71,9 @@ export default class Keyboard {
 				break;
 		}
 	}
+
+	removeEventListeners() {
+		this.domElement.removeEventListener("keydown", event => this.onKeyUp(event), false)
+		this.domElement.removeEventListener("keyup", event => this.onKeyUp(event), false)
+	}
 }

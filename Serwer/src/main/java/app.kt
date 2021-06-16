@@ -48,6 +48,11 @@ fun main(args: Array<String>) {
     staticFiles.location("/public")
     port(5000)
 
+    before("*") { req, res ->
+        res.header("Access-Control-Allow-Origin", "*")
+        res.header("Access-Control-Allow-Methods", "*")
+    }
+
     connectToMongo();
     createGameBoard()
 
@@ -66,9 +71,9 @@ fun main(args: Array<String>) {
 //    get("/addDb") {req, res -> DatabaseManager.addDb(req, res, mongoClient)}
 //    get("/addDoc") {req, res -> DatabaseManager.createGameDoc(gameBoardTable, playerTable, mongoClient)}
 
-    after("*") {
-        req, res -> {res.header("Access-Control-Allow-Origin", "*")}
-    }
+//    after("*") {
+//        req, res -> res.header("Access-Control-Allow-Origin", "*")
+//    }
 }
 
 fun connectToMongo() {
@@ -289,36 +294,37 @@ fun destroyObstacle (req:Request, res: Response):String {
     val obstacleZ:Int = req.queryParams("z").toInt()
 
     gameBoardTable[obstacleZ][obstacleX] = eFieldIndex;
-    println("Obstacle destroyed")
 
     return "Obstacle destroyed";
 }
 
 fun destroyPlayer(req: Request, res: Response):String {
-    println("Player destroyed")
-    val playerType:String = req.queryParams("playerType");
-    val playerX:Int = req.queryParams("x").toInt()
-    val playerZ:Int = req.queryParams("z").toInt()
 
-    // Remove him from gameBoard
-    gameBoardTable[playerZ][playerX] = eFieldIndex;
-    printGameBoard();
+    if (playerTable.size == 2) {
+        val playerType:String = req.queryParams("playerType");
+        val destroyedPlayer:Player? = playerTable.find { it.playerType == playerType }
 
-    // Remove player from player table
-    val playerFound:Player? = playerTable.find { it.playerType == playerType }
-    playerTable.remove(playerFound)
+        // Clear game data
+        for (i:Int in 0 until gameBoardTable.size) {
+            for (j:Int in 0 until gameBoardTable.size) {
+                gameBoardTable[i][j] = eFieldIndex;
+            }
+        }
+        for (k:Int in 0 until playerTable.size) {
+            playerTable.removeAt(0);
+        }
 
-    println("Player table:")
-    for (i:Int in 0 until playerTable.size) {
-        println(Gson().toJson(playerTable[i]))
+        // Save clear game to the database
+        DatabaseManager.updateGameDoc(gameBoardTable, playerTable, mongoClient);
+
+        return if (destroyedPlayer != null) {
+            Gson().toJson(destroyedPlayer);
+        } else {
+            "No player to delete"
+        }
     }
 
-    // Send info to client with winning player
-    return if (playerFound != null) {
-        "No player to delete"
-    } else {
-        Gson().toJson(playerFound);
-    }
+    return "No player to delete";
 }
 
 

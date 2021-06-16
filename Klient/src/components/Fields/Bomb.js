@@ -9,8 +9,9 @@ import {
 } from "three";
 
 export default class Bomb {
-	constructor(scene, id, bombPosition) {
+	constructor(scene, game, id, bombPosition) {
 		this.scene = scene;
+		this.game = game;
 		this.bombPosition = bombPosition
 		this.id = id
 		this.primeTime = 550 // Time before explosion
@@ -62,19 +63,32 @@ export default class Bomb {
 		this.scene.remove(this.mesh)
 
 		// Neighboring blocks and players destruction
-		this.deleteNeighbors(new Vector3(0, 0, -1))
-		this.deleteNeighbors(new Vector3(0, 0, 1))
-		this.deleteNeighbors(new Vector3(-1, 0, 0))
-		this.deleteNeighbors(new Vector3(1, 0, 0))
+		let ray1 = this.deleteNeighbors(new Vector3(0, 0, -1))
+		let ray2 = this.deleteNeighbors(new Vector3(0, 0, 1))
+		let ray3 = this.deleteNeighbors(new Vector3(-1, 0, 0))
+		let ray4 = this.deleteNeighbors(new Vector3(1, 0, 0))
+
+		console.log(ray1, ray2, ray3, ray4);
+		if (ray1 != undefined) {
+			return ray1
+		} else if (ray2 != undefined) {
+			return ray2
+		} else if (ray3 != undefined) {
+			return ray3
+		} else if (ray4 != undefined) {
+			return ray4
+		} else {
+			return undefined
+		}
 	}
 
 	deleteNeighbors(directionVect) {
 		this.raycaster = new Raycaster()
 		this.raycaster.ray = new Ray(this.mesh.position, directionVect)
 
-		console.log("Intersects:");
+		// console.log("Intersects:");
 		let interSec = this.raycaster.intersectObjects(this.scene.children);
-		console.log(interSec);
+		// console.log(interSec);
 
 		if (interSec.length > 0) {
 			let closestDestroyed = false;
@@ -118,32 +132,29 @@ export default class Bomb {
 
 								case "player":
 									// Destroy player on server
+									console.log("Player type:");
 									console.log(obj.playerType);
 
-									// $.ajax({
-									// 	method: "GET",
-									// 	url: "http://localhost:5000/destroyPlayer",
-									// 	contentType: "json",
-									// 	data: {
-									// 		name: obj.playerType,
-									// 		x: obj.position.x - 0.5,
-									// 		z: obj.position.z - 0.5,
-									// 	}
-									// }).done((data) => {
-									// 	console.log(data);
-									// 	if (data != "No player to delete") {
+									$.ajax({
+										method: "GET",
+										url: "http://localhost:5000/destroyPlayer",
+										contentType: "json",
+										data: {
+											playerType: obj.playerType,
+											x: Math.round(obj.position.x - 0.5),
+											z: Math.round(obj.position.z - 0.5),
+										}
+									}).done((data) => {
+										console.log(data);
+									})
 
-									// 	}
-									// 	// End game 
-									// 	// Determine winnig player - alert?
-									// 	// Stop game refresh interval
-									// })
-									break;
+									return obj.playerType;
 
 								default:
 									break;
 							}
 							this.scene.remove(obj);
+
 							sthDestroyed = false;
 
 							// Display fire / lasers

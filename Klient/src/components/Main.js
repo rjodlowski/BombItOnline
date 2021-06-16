@@ -160,10 +160,18 @@ export default class Main {
 						this.game.bombs[i].grow()
 					} else {
 						console.log(this.game.bombs);
-						this.game.bombs[i].explode();
+						let a = this.game.bombs[i].explode();
 						this.game.bombs.splice(i, 1);
 						console.log(this.game.bombs);
+
+						console.log("Main return");
+						console.log(a);
+
+						if (a != undefined) {
+							this.endGame(a)
+						}
 					}
+
 				}
 			}
 		}
@@ -248,11 +256,11 @@ export default class Main {
 
 						// if no bomb on this position in game  
 						if (this.game.bombs.findIndex(e => e.bombPosition.equals(new Vector3(x, 0, z))) == -1) {
-							let bomb = new Bomb(this.scene, this.game.bombId, new Vector3(x, 0, z))
+							let bomb = new Bomb(this.scene, this.game, this.game.bombId, new Vector3(x, 0, z))
 							this.game.bombs.push(bomb);
 							this.game.bombId++;
-							console.log("Bomb placed ingame");
-							console.log(this.game.bombs);
+							// console.log("Bomb placed ingame");
+							// console.log(this.game.bombs);
 						}
 						break;
 
@@ -319,6 +327,31 @@ export default class Main {
 				}
 			}
 		}
+	}
+
+	endGame(destroyedPlayerType) {
+		console.log("Game end");
+		console.log(destroyedPlayerType);
+
+		clearInterval(this.gameUpdateInterval);
+
+		console.log("Player data:");
+		console.log(this.game.player.playerData.playerType);
+		console.log(this.game.enemyPlayer.playerData.playerType);
+
+		if (destroyedPlayerType === this.game.player.playerData.playerType) {
+			alert("You lose!")
+		} else if (destroyedPlayerType === this.game.enemyPlayer.playerData.playerType) {
+			alert("You win!")
+		}
+
+		this.scene.remove(this.game.enemyPlayer.mesh);
+		this.scene.remove(this.game.player.mesh);
+
+		this.keyboard.removeEventListeners();
+		window.onkeydown = null;
+
+		this.game.gameStarted = false;
 	}
 	//#endregion End of other game functions
 }
