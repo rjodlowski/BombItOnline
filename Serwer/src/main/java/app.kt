@@ -2,6 +2,8 @@ import spark.*
 import spark.Spark.*
 import spark.Spark.after
 import com.google.gson.Gson
+import com.mongodb.*
+import com.mongodb.client.*
 
 var fieldTable = mutableListOf<LevelItem>()
 var playerTable = mutableListOf<Player>()
@@ -40,11 +42,13 @@ var secondPlayerPlacedBomb:Boolean = false
 var secondPlayerMoveAfterBomb = false;
 var secondPlayerBombCords:MutableList<Int> = mutableListOf();
 
+var mongoClient:MongoClient? = null
 
 fun main(args: Array<String>) {
     staticFiles.location("/public")
     port(5000)
 
+    connectToMongo();
     createGameBoard()
 
     get("/") { _, res -> res.redirect("index.html") }
@@ -59,8 +63,21 @@ fun main(args: Array<String>) {
     get("/destroyObstacle") {req, res -> destroyObstacle(req, res)}
     get("/destroyPlayer") {req, res -> destroyPlayer(req, res)}
 
+//    get("/addDb") {req, res -> DatabaseManager.addDb(req, res, mongoClient)}
+//    get("/addDoc") {req, res -> DatabaseManager.createGameDoc(gameBoardTable, playerTable, mongoClient)}
+
     after("*") {
         req, res -> {res.header("Access-Control-Allow-Origin", "*")}
+    }
+}
+
+fun connectToMongo() {
+    try {
+        mongoClient = MongoClients.create("mongodb+srv://user1:sojusz3@cluster0.wfth2.mongodb.net/EndProject?retryWrites=true&w=majority")
+        println("Connected to MongoDB")
+    } catch (e: MongoException) {
+        println("Error")
+        println(e.message)
     }
 }
 
@@ -153,6 +170,8 @@ fun load(req: Request, res: Response):String {
 }
 
 fun updateGame(req:Request, res: Response):String {
+    DatabaseManager.updateGameDoc(gameBoardTable, playerTable, mongoClient);
+
     return Gson().toJson(gameBoardTable);
 }
 
