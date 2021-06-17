@@ -1,4 +1,4 @@
-// import Animation from "./Animation"
+import Animation from "./Animation"
 import KeyboardConfig from "./KeyboardConfig";
 
 const KEYS = {
@@ -24,13 +24,13 @@ const KEYS = {
 export default class Keyboard {
 	constructor(
 		domElement,
-		// animation,
-		// modelMesh
+		animation,
+		modelMesh
 	) {
 
 		this.domElement = domElement;
-		// this.animation = animation
-		// this.modelMesh = modelMesh
+		this.animation = animation
+		this.modelMesh = modelMesh
 
 		// events
 		this.domElement.addEventListener('keydown', event => this.onKeyDown(event), false);
@@ -41,15 +41,19 @@ export default class Keyboard {
 		switch (event.keyCode) {
 			case KEYS.up:
 				KeyboardConfig.moveForward = false;
+				this.animation.playAnim("stand")
 				break;
 			case KEYS.down:
 				KeyboardConfig.moveBack = false;
+				this.animation.playAnim("stand")
 				break;
 			case KEYS.left:
 				KeyboardConfig.moveLeft = false;
+				this.animation.playAnim("stand")
 				break;
 			case KEYS.right:
 				KeyboardConfig.moveRight = false;
+				this.animation.playAnim("stand")
 				break;
 		}
 		// console.log('onKeyChange', event.keyCode)
@@ -59,15 +63,23 @@ export default class Keyboard {
 		switch (event.keyCode) {
 			case KEYS.up:
 				KeyboardConfig.moveForward = true;
+				this.animation.playAnim("run")
+
 				break;
 			case KEYS.down:
 				KeyboardConfig.moveBack = true;
+				this.animation.playAnim("run")
+
 				break;
 			case KEYS.left:
 				KeyboardConfig.moveLeft = true;
+				this.animation.playAnim("run")
+
 				break;
 			case KEYS.right:
 				KeyboardConfig.moveRight = true;
+				this.animation.playAnim("run")
+
 				break;
 		}
 	}
