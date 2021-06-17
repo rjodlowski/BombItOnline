@@ -14,7 +14,7 @@ export default class Bomb {
 		this.game = game;
 		this.bombPosition = bombPosition
 		this.id = id
-		this.primeTime = 320 // Time before explosion
+		this.primeTime = 450 // Time before explosion
 		this.timePrimed = 0; // Time passed while growing
 		this.destructableObjects = [
 			"player",
@@ -41,9 +41,9 @@ export default class Bomb {
 
 	grow() {
 		// Bomb grows after being placed
-		this.mesh.scale.x += 0.004;
-		this.mesh.scale.y += 0.004;
-		this.mesh.scale.z += 0.004;
+		this.mesh.scale.x += 0.002;
+		this.mesh.scale.y += 0.002;
+		this.mesh.scale.z += 0.002;
 
 		this.timePrimed++;
 	}
@@ -53,7 +53,7 @@ export default class Bomb {
 
 		$.ajax({
 			method: "GET",
-			url: "http://localhost:5000/bombExplosion",
+			url: "https://bomb-it-project.herokuapp.com/bombExplosion",
 			contentType: "json",
 			data: {
 				x: this.bombPosition.x,
@@ -116,7 +116,7 @@ export default class Bomb {
 									// Destroy an obstacle on server
 									$.ajax({
 										method: "GET",
-										url: "http://localhost:5000/destroyObstacle",
+										url: "https://bomb-it-project.herokuapp.com/destroyObstacle",
 										contentType: "json",
 										data: {
 											x: obj.position.x - 0.5,
@@ -132,7 +132,7 @@ export default class Bomb {
 
 									$.ajax({
 										method: "GET",
-										url: "http://localhost:5000/destroyPlayer",
+										url: "https://bomb-it-project.herokuapp.com/destroyPlayer",
 										contentType: "json",
 										data: {
 											playerType: obj.playerType,

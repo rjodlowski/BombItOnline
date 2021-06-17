@@ -30,7 +30,6 @@ object DatabaseManager {
         playerTable:MutableList<Player>,
         mongoClient: MongoClient?
     ):String {
-
         val doc = Document("_id", ObjectId())
         doc.append("id", 0);
         doc.append("playerTable", Gson().toJson(playerTable))
@@ -48,15 +47,6 @@ object DatabaseManager {
         playerTable:MutableList<Player>,
         mongoClient: MongoClient?
     ):String {
-        // Print db contents
-//        val db = mongoClient?.getDatabase("BombItDatabase")
-//        val col = db?.getCollection("collection1");
-//        val xD = col?.find()
-//
-//        xD!!.forEach {
-//            println(it.toJson())
-//        }
-
         // Create the doc to update game record to
         val docToUpdate = Document("_id", ObjectId("60ca3cd2386a50419e123169"))
         docToUpdate.append("id", 0)

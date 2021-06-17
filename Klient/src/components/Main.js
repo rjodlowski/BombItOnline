@@ -152,7 +152,7 @@ export default class Main {
 
 				$.ajax({
 					method: "GET",
-					url: "http://localhost:5000/playerMove",
+					url: "https://bomb-it-project.herokuapp.com/playerMove",
 					contentType: "json",
 					data: {
 						playerType: this.game.playerData.playerType,
@@ -267,7 +267,7 @@ export default class Main {
 		this.checkNextPlayerIn = setInterval(() => {
 			$.ajax({
 				method: "GET",
-				url: "http://localhost:5000/awaitPlayer",
+				url: "https://bomb-it-project.herokuapp.com/awaitPlayer",
 				contentType: "json",
 				data: {
 					playerIndex: this.game.playerData.playerType,
@@ -308,13 +308,17 @@ export default class Main {
 
 			$.ajax({
 				method: "GET",
-				url: "http://localhost:5000/update",
+				url: "https://bomb-it-project.herokuapp.com/update",
+				contentType: "json",
+				data: {
+					test: "test"
+				}
 			}).done((data) => {
 				this.game.gameTable = JSON.parse(data);
 				this.updateGame();
 			})
 
-		}, 500);
+		}, 600);
 	}
 
 	updateGame() {
@@ -375,7 +379,7 @@ export default class Main {
 				if (playerWhoPlacedBombFound == -1) {
 					$.ajax({
 						method: "GET",
-						url: "http://localhost:5000/placeBomb",
+						url: "https://bomb-it-project.herokuapp.com/placeBomb",
 						contentType: "json",
 						data: {
 							playerType: this.game.playerData.playerType,

@@ -46,7 +46,7 @@ var mongoClient:MongoClient? = null
 
 fun main(args: Array<String>) {
     staticFiles.location("/public")
-    port(5000)
+    port(getHerokuPort())
 
     before("*") { req, res ->
         res.header("Access-Control-Allow-Origin", "*")
@@ -70,16 +70,11 @@ fun main(args: Array<String>) {
 
 //    get("/addDb") {req, res -> DatabaseManager.addDb(req, res, mongoClient)}
 //    get("/addDoc") {req, res -> DatabaseManager.createGameDoc(gameBoardTable, playerTable, mongoClient)}
-
-//    after("*") {
-//        req, res -> res.header("Access-Control-Allow-Origin", "*")
-//    }
 }
 
 fun connectToMongo() {
     try {
         mongoClient = MongoClients.create("mongodb+srv://user1:sojusz3@cluster0.wfth2.mongodb.net/EndProject?retryWrites=true&w=majority")
-        println("Connected to MongoDB")
     } catch (e: MongoException) {
         println("Error")
         println(e.message)
@@ -224,11 +219,7 @@ fun playerMove(req:Request, res:Response):String {
         }
     }
 
-    // Target return
     return "Position update successful!"
-
-    // Test return
-//    return Gson().toJson(gameBoardTable);
 }
 
 fun placeBomb(req: Request, res: Response):String {
@@ -259,12 +250,7 @@ fun placeBomb(req: Request, res: Response):String {
         }
     }
 
-
-//     Target return
     return "Dodano bombę!"
-
-    // Test return
-//    return Gson().toJson(gameBoardTable);
 }
 
 fun bombExplosion(req: Request, res: Response):String {
@@ -327,4 +313,10 @@ fun destroyPlayer(req: Request, res: Response):String {
     return "No player to delete";
 }
 
+fun getHerokuPort(): Int {
+    val processBuilder = ProcessBuilder()
+    return if (processBuilder.environment()["PORT"] != null) {
+        processBuilder.environment()["PORT"]!!.toInt()
+    } else 5000
+}
 

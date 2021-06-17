@@ -5,7 +5,7 @@ export default class Renderer {
 		this.scene = scene;
 		this.container = container;
 		this.threeRenderer = new WebGLRenderer({ antialias: true });
-		this.threeRenderer.setClearColor(0x73a9ff);
+		this.threeRenderer.setClearColor(0x113d0d);
 		this.threeRenderer.shadowMap.enabled = true;
 		this.threeRenderer.shadowMap.type = PCFSoftShadowMap;
 		this.container.appendChild(this.threeRenderer.domElement);

@@ -29,7 +29,7 @@ export default class GameLoader {
 
 		return $.ajax({
 			method: "GET",
-			url: "http://localhost:5000/load",
+			url: "https://bomb-it-project.herokuapp.com/load",
 		})
 	}
 
@@ -88,7 +88,7 @@ export default class GameLoader {
 
 		return $.ajax({
 			method: "GET",
-			url: "http://localhost:5000/newPlayer",
+			url: "https://bomb-it-project.herokuapp.com/newPlayer",
 		})
 	}
 
