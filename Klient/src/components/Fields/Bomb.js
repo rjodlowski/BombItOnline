@@ -22,6 +22,8 @@ export default class Bomb {
 			"obstacle"
 		];
 		this.lasers = [];
+		this.playerDestroyed = false;
+		this.playerToDestroy = null;
 
 		this.geometry = new IcosahedronGeometry(0.2, 5);
 		this.material = new MeshBasicMaterial({
@@ -86,11 +88,14 @@ export default class Bomb {
 		this.raycaster.ray = new Ray(this.mesh.position, directionVect)
 
 		let interSec = this.raycaster.intersectObjects(this.scene.children);
+		console.log("xD");
+		console.log(interSec);
 
 		if (interSec.length > 0) {
 			let closestDestroyed = false;
 			let sthDestroyed = false;
 			let previousObject = null;
+
 
 			for (let i = 0; i < interSec.length; i++) {
 				let dist = interSec[i].distance
@@ -144,8 +149,9 @@ export default class Bomb {
 									}).done((data) => {
 										console.log(data);
 									})
-
-									return obj.playerType;
+									this.playerDestroyed = true;
+									this.playerToDestroy = obj.playerType;
+								// return obj.playerType;
 
 								default:
 									break;
@@ -158,11 +164,9 @@ export default class Bomb {
 				}
 			}
 		}
-		// Render rays of fire 
-		this.renderFlames(interSec, directionVect);
-	}
 
-	renderFlames(interSec, directionVect) {
+		// Render rays of fire 
+		// this.renderFlames(interSec, directionVect);
 		let closestWall = null;
 		let startPos = this.mesh.position.clone()
 		let multiVect = null;
@@ -196,5 +200,12 @@ export default class Bomb {
 				this.scene.remove(this.lasers[i].points)
 			}
 		}, 500);
+
+		if (this.playerDestroyed) {
+			return this.playerToDestroy;
+		}
 	}
+
+	// renderFlames(interSec, directionVect) {
+	// }
 }

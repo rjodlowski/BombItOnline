@@ -186,6 +186,8 @@ export default class Main {
 						let a = this.game.bombs[i].explode();
 						this.game.bombs.splice(i, 1);
 
+						console.log(a);
+
 						if (a != undefined) {
 							this.endGame(a)
 						}

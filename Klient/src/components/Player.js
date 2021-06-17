@@ -15,7 +15,6 @@ export default class Player {
 	constructor(scene, playerData, manager) {
 		this.scene = scene;
 		this.playerData = playerData
-		this.name = "player";
 		this.manager = manager
 
 		if (this.playerData.playerType == "first") {
@@ -61,6 +60,7 @@ export default class Player {
 				}
 
 				this.mesh.playerType = this.playerData.playerType;
+				this.mesh.name = "player";
 
 				this.mesh.add(this.model)
 				this.scene.add(this.mesh);
