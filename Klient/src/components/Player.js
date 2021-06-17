@@ -3,7 +3,6 @@ import {
 	Mesh,
 	BoxGeometry,
 	MeshBasicMaterial,
-	Raycaster,
 } from "three";
 import { MD2Loader } from './MD2Loader';
 import Player1 from './assets/mm/tris.md2'
@@ -52,11 +51,6 @@ export default class Player {
 					this.playerData.y + 0.5,
 					this.playerData.z + 0.5
 				)
-				// this.model.position.set(
-				// 	this.playerData.x + 0.5,
-				// 	this.playerData.y + 0.5,
-				// 	this.playerData.z + 0.5
-				// )
 
 				if (this.playerData.playerType == "second") {
 					this.mesh.lookAt(

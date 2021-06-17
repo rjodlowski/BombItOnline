@@ -5,7 +5,6 @@ import {
 	Vector3,
 	Raycaster,
 	Ray,
-	AxesHelper,
 } from "three";
 import Laser from "./Laser";
 
@@ -15,7 +14,7 @@ export default class Bomb {
 		this.game = game;
 		this.bombPosition = bombPosition
 		this.id = id
-		this.primeTime = 550 // Time before explosion
+		this.primeTime = 320 // Time before explosion
 		this.timePrimed = 0; // Time passed while growing
 		this.destructableObjects = [
 			"player",
@@ -42,9 +41,9 @@ export default class Bomb {
 
 	grow() {
 		// Bomb grows after being placed
-		this.mesh.scale.x += 0.002;
-		this.mesh.scale.y += 0.002;
-		this.mesh.scale.z += 0.002;
+		this.mesh.scale.x += 0.004;
+		this.mesh.scale.y += 0.004;
+		this.mesh.scale.z += 0.004;
 
 		this.timePrimed++;
 	}
@@ -88,14 +87,11 @@ export default class Bomb {
 		this.raycaster.ray = new Ray(this.mesh.position, directionVect)
 
 		let interSec = this.raycaster.intersectObjects(this.scene.children);
-		console.log("xD");
-		console.log(interSec);
 
 		if (interSec.length > 0) {
 			let closestDestroyed = false;
 			let sthDestroyed = false;
 			let previousObject = null;
-
 
 			for (let i = 0; i < interSec.length; i++) {
 				let dist = interSec[i].distance
@@ -129,13 +125,10 @@ export default class Bomb {
 									}).done((data) => {
 										console.log(data);
 									})
-
 									break;
 
 								case "player":
 									// Destroy player on server
-									console.log("Player type:");
-									console.log(obj.playerType);
 
 									$.ajax({
 										method: "GET",
@@ -151,7 +144,6 @@ export default class Bomb {
 									})
 									this.playerDestroyed = true;
 									this.playerToDestroy = obj.playerType;
-								// return obj.playerType;
 
 								default:
 									break;
@@ -166,7 +158,6 @@ export default class Bomb {
 		}
 
 		// Render rays of fire 
-		// this.renderFlames(interSec, directionVect);
 		let closestWall = null;
 		let startPos = this.mesh.position.clone()
 		let multiVect = null;
@@ -205,7 +196,4 @@ export default class Bomb {
 			return this.playerToDestroy;
 		}
 	}
-
-	// renderFlames(interSec, directionVect) {
-	// }
 }

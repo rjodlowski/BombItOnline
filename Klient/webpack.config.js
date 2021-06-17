@@ -1,7 +1,7 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
 	entry: './src/index.js',
-	mode: "development", // none, development, production
+	mode: "development",
 	output: {
 		filename: 'bundle.js'
 	},
@@ -30,7 +30,7 @@ module.exports = {
 				use: [{
 					loader: 'url-loader',
 					options: {
-						limit: 8000, // Convert images < 8kb to base64 strings
+						limit: 8000,
 						name: 'images/[hash]-[name].[ext]'
 					}
 				}]

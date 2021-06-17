@@ -15,42 +15,34 @@ import Stats from 'three/examples/jsm/libs/stats.module.js';
 import Animation from "./Animation"
 import Keyboard from "./Keyboard";
 import KeyboardConfig from "./KeyboardConfig";
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 export default class Main {
 	constructor(container) {
 		this.container = container;
-		this.scene = new Scene();
-		this.renderer = new Renderer(this.scene, this.container);
-
-		this.camera = new Camera(this.renderer.threeRenderer);
-		let boardCenterVect = new Vector3(5, 0, 5);
-
-		// OrbitControls
-		// this.controls = new OrbitControls(this.camera.threeCamera, this.renderer.threeRenderer.domElement);
-		// this.controls.target = boardCenterVect
-		// this.camera.threeCamera.rotation.y += 90
-
 		this.isLoaded = null
 		this.animation = null
+		let boardCenterVect = new Vector3(5, 0, 5);
 
-		this.camera.threeCamera.position.set(5, 10, 7);
-		this.camera.threeCamera.lookAt(boardCenterVect)
-
+		this.scene = new Scene();
+		this.renderer = new Renderer(this.scene, this.container);
 		this.clock = new Clock()
 		this.manager = new LoadingManager();
 		this.enemyManager = new LoadingManager();
 		this.stats = new Stats()
+
+		this.camera = new Camera(this.renderer.threeRenderer);
+		this.camera.threeCamera.position.set(5, 10, 7);
+		this.camera.threeCamera.lookAt(boardCenterVect)
+
 		this.stats.showPanel(0)
 		document.body.appendChild(this.stats.dom)
-
 
 		this.game = new GameLoader(this.scene, this.manager);
 		this.game.getGameData().done((data) => {
 			// Render a level
 			this.game.gameData = JSON.parse(data);
 			this.game.gameData.players = [];
-			this.game.createLevelBasics(true, true)
+			this.game.createLevelBasics()
 			this.game.createLevelLayout();
 
 			// Add player to the game
@@ -78,9 +70,6 @@ export default class Main {
 					// Wait for another player to join the game
 					// then create it and start the game
 					this.waitforPlayer();
-
-				} else {
-					// console.log(data);
 				}
 			})
 		})
@@ -104,7 +93,6 @@ export default class Main {
 		requestAnimationFrame(this.render.bind(this));
 	}
 
-	//#region Render functions
 	playerMove() {
 		// Enables player movement
 
@@ -180,22 +168,20 @@ export default class Main {
 
 	bombsUpdate() {
 		// Bombs update - growing and explosion
+
 		if (this.game.gameStarted) {
 			if (this.game.bombs.length > 0) {
 				for (let i = 0; i < this.game.bombs.length; i++) {
 					if (this.game.bombs[i].timePrimed < this.game.bombs[i].primeTime) {
 						this.game.bombs[i].grow()
 					} else {
-						let a = this.game.bombs[i].explode();
+						let playerDestroyed = this.game.bombs[i].explode();
 						this.game.bombs.splice(i, 1);
 
-						console.log(a);
-
-						if (a != undefined) {
-							this.endGame(a)
+						if (playerDestroyed != undefined) {
+							this.endGame(playerDestroyed)
 						}
 					}
-
 				}
 			}
 		}
@@ -248,34 +234,30 @@ export default class Main {
 				if (closestWall.distance < 0.4) {
 
 					if (playerDirection.x == 1 && this.keyboard.dDown) {
-						// prawo - x1y0z0
+						// right - x1y0z0
 						KeyboardConfig.moveRight = false;
 						this.keyboard.canMoveRight = false;
 					}
 					if (playerDirection.x == -1 && this.keyboard.aDown) {
-						// lewo - x-1y0z0
+						// left - x-1y0z0
 						KeyboardConfig.moveLeft = false;
 						this.keyboard.canMoveLeft = false;
 					}
 					if (playerDirection.z == 1 && this.keyboard.sDown) {
-						// dół - x0y0z1
+						// bottom - x0y0z1
 						KeyboardConfig.moveBack = false;
 						this.keyboard.canMoveDown = false;
 					}
 					if (playerDirection.z == -1 && this.keyboard.wDown) {
-						// góra - x0y0z-1
+						// top - x0y0z-1
 						KeyboardConfig.moveForward = false;
 						this.keyboard.canMoveUp = false;
 					}
-
 				}
 			}
-
 		}
 	}
-	//#endregion End of render functions
 
-	//#region Other game functions
 	waitforPlayer() {
 		// Awaits for next player to join the game
 		// When next player joins, starts the game
@@ -293,6 +275,7 @@ export default class Main {
 			}).done((data) => {
 				console.log(data);
 				if (data != "Brak drugiego gracza") {
+
 					// Add new player, break interval
 					console.log("New player added");
 					console.log(JSON.parse(data));
@@ -342,21 +325,8 @@ export default class Main {
 				let fieldType = this.game.gameTable[z][x]
 
 				switch (fieldType) {
-					case 0:
-						// Ignore - empty field
-						break;
-
-					case 1:
-						// Ignore - Indestructible wall
-						break;
-
-					case 2:
-						// Ignore - Obstacle
-						break;
-
 					case 3:
 						// Bomb
-
 						// if no bomb on this position in game  
 						if (this.game.bombs.findIndex(e => e.bombPosition.equals(new Vector3(x, 0, z))) == -1) {
 							let bomb = new Bomb(this.scene, this.game, this.game.bombId, new Vector3(x, 0, z))
@@ -374,7 +344,6 @@ export default class Main {
 								z + 0.5
 							)
 						}
-
 						break;
 
 					case 5:
@@ -387,10 +356,6 @@ export default class Main {
 							)
 						}
 						break;
-
-					default:
-						console.log("Unknown field");
-						break;
 				}
 			}
 		}
@@ -400,8 +365,8 @@ export default class Main {
 		// Adds an ability for the local player to place bombs - that's it for now
 
 		window.onkeydown = (key) => {
+			// Space clicked
 			if (key.which == 32) {
-				console.log("Space clicked");
 
 				let playerWhoPlacedBombFound = this.game.bombs.findIndex(x => x.playerType === this.game.playerData.playerType)
 				console.log(this.game.playerData.playerType);
@@ -418,7 +383,6 @@ export default class Main {
 							positionZ: Math.floor(this.game.player.mesh.position.z)
 						}
 					}).done((data) => {
-						// Target log
 						console.log(data);
 					})
 				}
@@ -427,14 +391,8 @@ export default class Main {
 	}
 
 	endGame(destroyedPlayerType) {
-		console.log("Game end");
-		console.log(destroyedPlayerType);
 
 		clearInterval(this.gameUpdateInterval);
-
-		console.log("Player data:");
-		console.log(this.game.player.playerData.playerType);
-		console.log(this.game.enemyPlayer.playerData.playerType);
 
 		if (destroyedPlayerType === this.game.player.playerData.playerType) {
 			alert("You lose!")
@@ -450,5 +408,4 @@ export default class Main {
 
 		this.game.gameStarted = false;
 	}
-	//#endregion End of other game functions
 }

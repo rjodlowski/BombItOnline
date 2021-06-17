@@ -28,7 +28,6 @@ export default class Keyboard {
 		this.aDown = false;
 		this.dDown = false;
 
-		// events
 		this.domElement.addEventListener('keydown', event => this.onKeyDown(event), false);
 		this.domElement.addEventListener('keyup', event => this.onKeyUp(event), false);
 	}
@@ -63,8 +62,6 @@ export default class Keyboard {
 	}
 
 	onKeyDown(event) {
-		console.log(KeyboardConfig);
-		console.log(this.canMoveUp, this.canMoveDown, this.canMoveLeft, this.canMoveRight);
 		switch (event.keyCode) {
 			case KEYS.up:
 				if (this.canMoveUp) {

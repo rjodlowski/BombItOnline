@@ -51,7 +51,5 @@ export default class Laser {
 
 		this.points = new Points(this.particlesGeometry, this.particleMaterial)
 		this.scene.add(this.points)
-
 	}
-
 }

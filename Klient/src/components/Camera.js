@@ -1,4 +1,7 @@
-import { PerspectiveCamera, Vector3 } from 'three';
+import {
+	PerspectiveCamera,
+	Vector3,
+} from 'three';
 
 export default class Camera {
 	constructor(renderer) {
@@ -19,5 +22,4 @@ export default class Camera {
 		this.threeCamera.aspect = renderer.domElement.width / renderer.domElement.height;
 		this.threeCamera.updateProjectionMatrix();
 	}
-
 }
