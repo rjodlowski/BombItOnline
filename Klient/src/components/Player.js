@@ -3,6 +3,7 @@ import {
 	Mesh,
 	BoxGeometry,
 	MeshBasicMaterial,
+	Raycaster,
 } from "three";
 import { MD2Loader } from './MD2Loader';
 import Player1 from './assets/mm/tris.md2'
@@ -27,6 +28,7 @@ export default class Player {
 
 		this.player = this.load(this.path)
 	}
+
 	load(path) {
 
 		new MD2Loader(this.manager).load(
@@ -38,18 +40,23 @@ export default class Player {
 					map: new TextureLoader().load(this.jpg),
 					morphTargets: true
 				}))
-				this.mesh = new Mesh(new BoxGeometry(0.5, 0.5, 0.5), new MeshBasicMaterial({
+				this.mesh = new Mesh(new BoxGeometry(0.4, 0.4, 0.4), new MeshBasicMaterial({
 					transparent: true,
 					opacity: 0,
 				}))
 
-				this.model.scale.set(0.017, 0.017, 0.017)
+				this.model.scale.set(0.015, 0.015, 0.015)
 				this.model.rotation.y -= 90
 				this.mesh.position.set(
 					this.playerData.x + 0.5,
 					this.playerData.y + 0.5,
 					this.playerData.z + 0.5
 				)
+				// this.model.position.set(
+				// 	this.playerData.x + 0.5,
+				// 	this.playerData.y + 0.5,
+				// 	this.playerData.z + 0.5
+				// )
 
 				if (this.playerData.playerType == "second") {
 					this.mesh.lookAt(

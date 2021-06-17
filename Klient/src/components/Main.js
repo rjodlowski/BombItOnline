@@ -2,7 +2,9 @@ import {
 	Scene,
 	Vector3,
 	LoadingManager,
-	Clock
+	Clock,
+	Ray,
+	Raycaster
 } from "three";
 import Renderer from "./Renderer"
 import Camera from "./Camera"
@@ -95,6 +97,7 @@ export default class Main {
 		this.checkPlayerMove();
 		this.bombsUpdate();
 		this.updateAnimations();
+		this.playerCollisionDetection();
 
 		this.stats.end();
 
@@ -211,6 +214,63 @@ export default class Main {
 		// Second player 
 		if (this.enemyAnimation) {
 			this.enemyAnimation.update(delta)
+		}
+	}
+
+	playerCollisionDetection() {
+		if (this.game.gameStarted) {
+			this.game.player.raycaster = new Raycaster()
+			let playerDirection = this.game.player.mesh.getWorldDirection();
+			this.game.player.raycaster.ray = new Ray(
+				this.game.player.mesh.position,
+				playerDirection
+			)
+
+			let intersects = this.game.player.raycaster.intersectObjects(this.scene.children)
+
+			let wallsToAvoid = []
+			if (intersects.length > 0) {
+				let previousObject = null;
+
+				// Get walls from all of intersects
+				for (let i = 0; i < intersects.length; i++) {
+					if (intersects[i].object != previousObject) {
+						previousObject = intersects[i].object;
+
+						if (intersects[i].object.type === "Mesh") {
+							wallsToAvoid.push(intersects[i])
+						}
+					}
+				}
+
+				let closestWall = wallsToAvoid[0]
+
+				if (closestWall.distance < 0.4) {
+
+					if (playerDirection.x == 1 && this.keyboard.dDown) {
+						// prawo - x1y0z0
+						KeyboardConfig.moveRight = false;
+						this.keyboard.canMoveRight = false;
+					}
+					if (playerDirection.x == -1 && this.keyboard.aDown) {
+						// lewo - x-1y0z0
+						KeyboardConfig.moveLeft = false;
+						this.keyboard.canMoveLeft = false;
+					}
+					if (playerDirection.z == 1 && this.keyboard.sDown) {
+						// dół - x0y0z1
+						KeyboardConfig.moveBack = false;
+						this.keyboard.canMoveDown = false;
+					}
+					if (playerDirection.z == -1 && this.keyboard.wDown) {
+						// góra - x0y0z-1
+						KeyboardConfig.moveForward = false;
+						this.keyboard.canMoveUp = false;
+					}
+
+				}
+			}
+
 		}
 	}
 	//#endregion End of render functions
