@@ -164,8 +164,8 @@ export default class Main {
 						this.game.bombs.splice(i, 1);
 						console.log(this.game.bombs);
 
-						console.log("Main return");
-						console.log(a);
+						// console.log("Main return");
+						// console.log(a);
 
 						if (a != undefined) {
 							this.endGame(a)

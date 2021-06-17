@@ -7,6 +7,7 @@ import {
 	Ray,
 	AxesHelper,
 } from "three";
+import Laser from "./Laser";
 
 export default class Bomb {
 	constructor(scene, game, id, bombPosition) {
@@ -20,6 +21,7 @@ export default class Bomb {
 			"player",
 			"obstacle"
 		];
+		this.lasers = [];
 
 		this.geometry = new IcosahedronGeometry(0.2, 5);
 		this.material = new MeshBasicMaterial({
@@ -48,7 +50,6 @@ export default class Bomb {
 	explode() {
 		// Handle bomb explosion
 
-		// Bomb disappearance
 		$.ajax({
 			method: "GET",
 			url: "http://localhost:5000/bombExplosion",
@@ -60,7 +61,6 @@ export default class Bomb {
 		}).done((data) => {
 			console.log(data);
 		})
-		this.scene.remove(this.mesh)
 
 		// Neighboring blocks and players destruction
 		let ray1 = this.deleteNeighbors(new Vector3(0, 0, -1))
@@ -68,7 +68,6 @@ export default class Bomb {
 		let ray3 = this.deleteNeighbors(new Vector3(-1, 0, 0))
 		let ray4 = this.deleteNeighbors(new Vector3(1, 0, 0))
 
-		console.log(ray1, ray2, ray3, ray4);
 		if (ray1 != undefined) {
 			return ray1
 		} else if (ray2 != undefined) {
@@ -86,9 +85,7 @@ export default class Bomb {
 		this.raycaster = new Raycaster()
 		this.raycaster.ray = new Ray(this.mesh.position, directionVect)
 
-		// console.log("Intersects:");
 		let interSec = this.raycaster.intersectObjects(this.scene.children);
-		// console.log(interSec);
 
 		if (interSec.length > 0) {
 			let closestDestroyed = false;
@@ -154,22 +151,50 @@ export default class Bomb {
 									break;
 							}
 							this.scene.remove(obj);
-
 							sthDestroyed = false;
-
-							// Display fire / lasers
 						}
 					}
 					previousObject = obj;
 				}
+			}
+		}
+		// Render rays of fire 
+		this.renderFlames(interSec, directionVect);
+	}
 
+	renderFlames(interSec, directionVect) {
+		let closestWall = null;
+		let startPos = this.mesh.position.clone()
+		let multiVect = null;
+		let endPos = null;
+
+		for (let i = interSec.length - 1; i >= 0; i--) {
+			if (interSec[i].object.name === "wall") {
+				closestWall = interSec[i]
 			}
 		}
 
-		// Generating flames (for 1 sec?)
+		if (closestWall.distance > 1.5) {
+			multiVect = directionVect.clone().multiplyScalar(2);
+			endPos = this.mesh.position.clone().add(multiVect)
 
-		// Render rays of fire 
-		//// Show them only on free fields or in place of destroyed walls
+		} else if (closestWall.distance <= 1.5) {
+			multiVect = directionVect.clone();
+			endPos = this.mesh.position.clone().add(multiVect)
 
+		} else if (closestWall.distance <= 0.5) {
+			endPos = this.mesh.position.clone()
+		}
+
+		let laser = new Laser(this.scene, startPos, endPos)
+		laser.generate();
+		this.lasers.push(laser)
+
+		setTimeout(() => {
+			this.scene.remove(this.mesh)
+			for (let i = 0; i < this.lasers.length; i++) {
+				this.scene.remove(this.lasers[i].points)
+			}
+		}, 500);
 	}
 }
