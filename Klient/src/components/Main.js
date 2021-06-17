@@ -1,6 +1,8 @@
 import {
 	Scene,
 	Vector3,
+	LoadingManager,
+	Clock
 } from "three";
 import Renderer from "./Renderer"
 import Camera from "./Camera"
@@ -8,6 +10,10 @@ import GameLoader from "./GameLoader"
 import Player from "./Player"
 import Bomb from "./Fields/Bomb";
 import Stats from 'three/examples/jsm/libs/stats.module.js';
+import Model from "./Model"
+import Animation from "./Animation"
+import Player1 from './assets/mm/tris.md2'
+import Player2 from './assets/yoshi/tris.md2'
 import Keyboard from "./Keyboard";
 import KeyboardConfig from "./KeyboardConfig";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -25,15 +31,20 @@ export default class Main {
 		// this.controls = new OrbitControls(this.camera.threeCamera, this.renderer.threeRenderer.domElement);
 		// this.controls.target = boardCenterVect
 		// this.camera.threeCamera.rotation.y += 90
+		this.isLoaded = null
+		this.animation = null
 
 		this.camera.threeCamera.position.set(5, 10, 7);
 		this.camera.threeCamera.lookAt(boardCenterVect)
 
 		// Stats
+		this.clock = new Clock()
+		this.manager = new LoadingManager();
 		this.stats = new Stats()
 		this.stats.showPanel(0)
 		document.body.appendChild(this.stats.dom)
 
+		
 		this.game = new GameLoader(this.scene);
 		this.game.getGameData().done((data) => {
 			// Render a level
@@ -45,12 +56,46 @@ export default class Main {
 			// Add player to the game
 			this.game.addPlayer().done((data) => {
 				if (data != "Brak możliwości dodania gracza") {
+					
 					this.game.playerData = JSON.parse(data)
 					this.game.gameData.players.push(this.game.playerData);
 
-					this.game.materializePlayer();
-					this.keyboard = new Keyboard(window);
+					this.game.materializePlayer(this.manager);
+					// this.keyboard = new Keyboard(window);
+					// if(this.game.playerData.playerType == "first"){
+					// 	this.game.player.model = new Model(this.scene, this.manager, this.game.playerData.playerType);
+					// 	this.game.player.model.load(Player1);
+					// 	// this.player.model.scale.set(0.5, 0.5, 0.5)
+			
+					// }else{
+					// 	this.game.player.model = new Model(this.scene, this.manager, this.game.playerData.playerType);
+					// 	this.game.player.model.load(Player2);
+					// 	// this.player.model.scale.set(0.5, 0.5, 0.5)
+					// }
+					this.manager.onProgress = (item, loaded, total) => {
+						console.log(`progress ${item}: ${loaded} ${total}`);
+					};
+					
+					this.manager.onLoad = () => {
 
+						this.isLoaded = true;
+						//
+						console.log("MODEL LOADED!!!")
+			
+						// model loaded - można sterować animacjami
+			
+						this.animation = new Animation(this.game.player.model)
+			
+						// przykładowa animacja z modelu Mario
+			
+						// this.animation.playAnim("run")
+			
+						//kawiatura
+			
+						this.keyboard = new Keyboard(window, this.animation, this.game.player.mesh);
+						
+			
+					};
 					// Wait for another player to join the game
 					// then create it and start the game
 					this.waitforPlayer();
@@ -70,7 +115,10 @@ export default class Main {
 		this.playerMove();
 		this.checkPlayerMove();
 		this.bombsUpdate();
+		var delta = this.clock.getDelta();
 
+		// wykonanie funkcji update w module Animations - zobacz do pliku Animations
+		if (this.animation) this.animation.update(delta)
 		this.stats.end();
 
 		requestAnimationFrame(this.render.bind(this));
@@ -81,6 +129,9 @@ export default class Main {
 		// Enables player movement
 
 		if (this.game.gameStarted) {
+
+
+
 			let playerPos = this.game.player.mesh.position
 			if (KeyboardConfig.moveLeft) {
 				this.game.player.mesh.lookAt(
@@ -99,6 +150,7 @@ export default class Main {
 				this.game.player.mesh.translateZ(0.02)
 			}
 			if (KeyboardConfig.moveForward) {
+				console.log(this.game.player , "player")
 				this.game.player.mesh.lookAt(
 					playerPos.x,
 					playerPos.y,
@@ -127,20 +179,20 @@ export default class Main {
 			let playerPos = this.game.player.mesh.position;
 
 			if (
-				Math.floor(playerPos.x) != this.game.player.playerData.x ||
-				Math.floor(playerPos.z) != this.game.player.playerData.z
+				Math.floor(playerPos.x) != this.game.playerData.x ||
+				Math.floor(playerPos.z) != this.game.playerData.z
 			) {
-				this.game.player.playerData.x = Math.floor(this.game.player.mesh.position.x)
-				this.game.player.playerData.z = Math.floor(this.game.player.mesh.position.z)
+				this.game.playerData.x = Math.floor(playerPos.x)
+				this.game.playerData.z = Math.floor(playerPos.z)
 
 				$.ajax({
 					method: "GET",
 					url: "http://localhost:5000/playerMove",
 					contentType: "json",
 					data: {
-						playerType: this.game.player.playerData.playerType,
-						playerX: this.game.player.playerData.x,
-						playerZ: this.game.player.playerData.z,
+						playerType: this.game.playerData.playerType,
+						playerX: this.game.playerData.x,
+						playerZ: this.game.playerData.z,
 					}
 				}).done((data) => {
 					// console.log("Position update successful!");
@@ -266,7 +318,7 @@ export default class Main {
 
 					case 4:
 						// Player 1
-						if (this.game.player.playerData.playerType != "first") {
+						if (this.game.playerData.playerType != "first") {
 							this.game.enemyPlayer.mesh.position.set(
 								x + 0.5,
 								0.5,
@@ -278,7 +330,7 @@ export default class Main {
 
 					case 5:
 						// Player 2
-						if (this.game.player.playerData.playerType != "second") {
+						if (this.game.playerData.playerType != "second") {
 							this.game.enemyPlayer.mesh.position.set(
 								x + 0.5,
 								0.5,
@@ -303,8 +355,8 @@ export default class Main {
 			if (key.which == 32) {
 				console.log("Space clicked");
 
-				let playerWhoPlacedBombFound = this.game.bombs.findIndex(x => x.playerType === this.game.player.playerData.playerType)
-				console.log(this.game.player.playerData.playerType);
+				let playerWhoPlacedBombFound = this.game.bombs.findIndex(x => x.playerType === this.game.playerData.playerType)
+				console.log(this.game.playerData.playerType);
 				console.log(playerWhoPlacedBombFound);
 
 				if (playerWhoPlacedBombFound == -1) {
@@ -313,7 +365,7 @@ export default class Main {
 						url: "http://localhost:5000/placeBomb",
 						contentType: "json",
 						data: {
-							playerType: this.game.player.playerData.playerType,
+							playerType: this.game.playerData.playerType,
 							positionX: Math.floor(this.game.player.mesh.position.x),
 							positionZ: Math.floor(this.game.player.mesh.position.z)
 						}

@@ -3,6 +3,7 @@ import {
 	AxesHelper,
 	GridHelper,
 	Vector3,
+	LoadingManager,
 } from "three"
 import Enemy from "./Fields/Enemy.js"
 import Wall from "./Fields/Wall.js"
@@ -11,9 +12,13 @@ import Obstacle from "./Fields/Obstacle.js"
 import Light from "./Fields/Light.js"
 import Plane from "./Fields/Plane.js"
 import Player from "./Player"
+import Model from "./Model"
+import Animation from "./Animation"
+import Player1 from './assets/mm/tris.md2'
+import Player2 from './assets/yoshi/tris.md2'
 
 export default class GameLoader {
-	constructor(scene) {
+	constructor(scene, manager) {
 		this.scene = scene;
 		this.gameData = null;
 		this.player = undefined
@@ -24,6 +29,9 @@ export default class GameLoader {
 		this.gameTable = [];
 		this.enemyPlayerData = null;
 		this.enemyPlayer = null;
+		this.manager = manager
+		// this.player.model = null;
+		
 	}
 
 	getGameData() {
@@ -32,7 +40,7 @@ export default class GameLoader {
 		return $.ajax({
 			method: "GET",
 			url: "http://localhost:5000/load",
-			contentType: "json",
+			// contentType: "json",
 		})
 	}
 
@@ -118,19 +126,19 @@ export default class GameLoader {
 		return $.ajax({
 			method: "GET",
 			url: "http://localhost:5000/newPlayer",
-			contentType: "json",
+			// contentType: "json",
 		})
 	}
 
-	materializePlayer() {
+	materializePlayer(manager) {
 		// Physically renders player in the game
 
 		console.log("PlayerData game");
 		console.log(this.playerData);
-
-		this.player = new Player(this.scene, this.playerData)
-		this.playerX = this.player.mesh.position.x
-		this.playerZ = this.player.mesh.position.z
+		this.player = new Player(this.scene, this.playerData, manager)
+		// this.playerX = this.player.mesh.position.x
+		// this.playerZ = this.player.mesh.position.z
+		
 	}
 
 }
