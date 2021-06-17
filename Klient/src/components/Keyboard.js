@@ -1,4 +1,3 @@
-import Animation from "./Animation"
 import KeyboardConfig from "./KeyboardConfig";
 
 const KEYS = {
@@ -13,21 +12,10 @@ const KEYS = {
 	"up": 87,
 	"right": 68,
 	"down": 83,
-
-	// Space
-	"bomb": 32
-
-	// Enter
-	// "bomb" : 13
 };
 
 export default class Keyboard {
-	constructor(
-		domElement,
-		animation,
-		modelMesh
-	) {
-
+	constructor(domElement, animation, modelMesh) {
 		this.domElement = domElement;
 		this.animation = animation
 		this.modelMesh = modelMesh
@@ -56,7 +44,6 @@ export default class Keyboard {
 				this.animation.playAnim("stand")
 				break;
 		}
-		// console.log('onKeyChange', event.keyCode)
 	}
 
 	onKeyDown(event) {

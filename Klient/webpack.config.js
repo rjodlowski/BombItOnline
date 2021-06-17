@@ -35,6 +35,12 @@ module.exports = {
 					}
 				}]
 			},
+			// MD2 loader
+			{
+				test: /\.(md2)$/i,
+				type: 'asset/resource',
+			},
+
 		]
 	},
 };

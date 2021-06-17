@@ -10,10 +10,7 @@ import GameLoader from "./GameLoader"
 import Player from "./Player"
 import Bomb from "./Fields/Bomb";
 import Stats from 'three/examples/jsm/libs/stats.module.js';
-import Model from "./Model"
 import Animation from "./Animation"
-import Player1 from './assets/mm/tris.md2'
-import Player2 from './assets/yoshi/tris.md2'
 import Keyboard from "./Keyboard";
 import KeyboardConfig from "./KeyboardConfig";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
@@ -31,21 +28,22 @@ export default class Main {
 		// this.controls = new OrbitControls(this.camera.threeCamera, this.renderer.threeRenderer.domElement);
 		// this.controls.target = boardCenterVect
 		// this.camera.threeCamera.rotation.y += 90
+
 		this.isLoaded = null
 		this.animation = null
 
 		this.camera.threeCamera.position.set(5, 10, 7);
 		this.camera.threeCamera.lookAt(boardCenterVect)
 
-		// Stats
 		this.clock = new Clock()
 		this.manager = new LoadingManager();
+		this.enemyManager = new LoadingManager();
 		this.stats = new Stats()
 		this.stats.showPanel(0)
 		document.body.appendChild(this.stats.dom)
 
-		
-		this.game = new GameLoader(this.scene);
+
+		this.game = new GameLoader(this.scene, this.manager);
 		this.game.getGameData().done((data) => {
 			// Render a level
 			this.game.gameData = JSON.parse(data);
@@ -56,49 +54,29 @@ export default class Main {
 			// Add player to the game
 			this.game.addPlayer().done((data) => {
 				if (data != "Brak możliwości dodania gracza") {
-					
+
 					this.game.playerData = JSON.parse(data)
 					this.game.gameData.players.push(this.game.playerData);
 
-					this.game.materializePlayer(this.manager);
-					// this.keyboard = new Keyboard(window);
-					// if(this.game.playerData.playerType == "first"){
-					// 	this.game.player.model = new Model(this.scene, this.manager, this.game.playerData.playerType);
-					// 	this.game.player.model.load(Player1);
-					// 	// this.player.model.scale.set(0.5, 0.5, 0.5)
-			
-					// }else{
-					// 	this.game.player.model = new Model(this.scene, this.manager, this.game.playerData.playerType);
-					// 	this.game.player.model.load(Player2);
-					// 	// this.player.model.scale.set(0.5, 0.5, 0.5)
-					// }
+					this.game.materializePlayer();
+
 					this.manager.onProgress = (item, loaded, total) => {
 						console.log(`progress ${item}: ${loaded} ${total}`);
 					};
-					
-					this.manager.onLoad = () => {
 
+					this.manager.onLoad = () => {
 						this.isLoaded = true;
-						//
-						console.log("MODEL LOADED!!!")
-			
-						// model loaded - można sterować animacjami
-			
+						console.log("First player's model loaded")
+
 						this.animation = new Animation(this.game.player.model)
-			
-						// przykładowa animacja z modelu Mario
-			
-						// this.animation.playAnim("run")
-			
-						//kawiatura
-			
+						this.animation.playAnim("stand")
 						this.keyboard = new Keyboard(window, this.animation, this.game.player.mesh);
-						
-			
 					};
+
 					// Wait for another player to join the game
 					// then create it and start the game
 					this.waitforPlayer();
+
 				} else {
 					// console.log(data);
 				}
@@ -112,13 +90,12 @@ export default class Main {
 		this.stats.begin()
 
 		this.renderer.render(this.scene, this.camera.threeCamera);
+
 		this.playerMove();
 		this.checkPlayerMove();
 		this.bombsUpdate();
-		var delta = this.clock.getDelta();
+		this.updateAnimations();
 
-		// wykonanie funkcji update w module Animations - zobacz do pliku Animations
-		if (this.animation) this.animation.update(delta)
 		this.stats.end();
 
 		requestAnimationFrame(this.render.bind(this));
@@ -129,10 +106,8 @@ export default class Main {
 		// Enables player movement
 
 		if (this.game.gameStarted) {
-
-
-
 			let playerPos = this.game.player.mesh.position
+
 			if (KeyboardConfig.moveLeft) {
 				this.game.player.mesh.lookAt(
 					playerPos.x - 10,
@@ -150,7 +125,6 @@ export default class Main {
 				this.game.player.mesh.translateZ(0.02)
 			}
 			if (KeyboardConfig.moveForward) {
-				console.log(this.game.player , "player")
 				this.game.player.mesh.lookAt(
 					playerPos.x,
 					playerPos.y,
@@ -195,9 +169,7 @@ export default class Main {
 						playerZ: this.game.playerData.z,
 					}
 				}).done((data) => {
-					// console.log("Position update successful!");
 					console.log(data);
-					// console.log(JSON.parse(data));
 				})
 			}
 		}
@@ -211,13 +183,8 @@ export default class Main {
 					if (this.game.bombs[i].timePrimed < this.game.bombs[i].primeTime) {
 						this.game.bombs[i].grow()
 					} else {
-						console.log(this.game.bombs);
 						let a = this.game.bombs[i].explode();
 						this.game.bombs.splice(i, 1);
-						console.log(this.game.bombs);
-
-						// console.log("Main return");
-						// console.log(a);
 
 						if (a != undefined) {
 							this.endGame(a)
@@ -226,6 +193,22 @@ export default class Main {
 
 				}
 			}
+		}
+	}
+
+	updateAnimations() {
+		// Updates both players' animations
+
+		var delta = this.clock.getDelta();
+
+		// First player
+		if (this.animation) {
+			this.animation.update(delta)
+		}
+
+		// Second player 
+		if (this.enemyAnimation) {
+			this.enemyAnimation.update(delta)
 		}
 	}
 	//#endregion End of render functions
@@ -252,9 +235,15 @@ export default class Main {
 					console.log("New player added");
 					console.log(JSON.parse(data));
 					this.game.enemyPlayerData = JSON.parse(data);
-					this.game.enemyPlayer = new Player(this.scene, this.game.enemyPlayerData)
-					this.addPlayerActions()
+					this.game.enemyPlayer = new Player(this.scene, this.game.enemyPlayerData, this.enemyManager)
 
+					this.enemyManager.onLoad = () => {
+						console.log("Second player's model loaded")
+						this.enemyAnimation = new Animation(this.game.enemyPlayer.model)
+						this.enemyAnimation.playAnim("stand")
+					};
+
+					this.addPlayerActions()
 					clearInterval(this.checkNextPlayerIn);
 
 					// Start the game 
@@ -311,8 +300,6 @@ export default class Main {
 							let bomb = new Bomb(this.scene, this.game, this.game.bombId, new Vector3(x, 0, z))
 							this.game.bombs.push(bomb);
 							this.game.bombId++;
-							// console.log("Bomb placed ingame");
-							// console.log(this.game.bombs);
 						}
 						break;
 
@@ -337,7 +324,6 @@ export default class Main {
 								z + 0.5
 							)
 						}
-
 						break;
 
 					default:
@@ -372,9 +358,6 @@ export default class Main {
 					}).done((data) => {
 						// Target log
 						console.log(data);
-
-						// Test log
-						// console.log(JSON.parse(data));
 					})
 				}
 			}

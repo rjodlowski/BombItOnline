@@ -2,20 +2,13 @@ import {
 	AmbientLight,
 	AxesHelper,
 	GridHelper,
-	Vector3,
-	LoadingManager,
 } from "three"
 import Enemy from "./Fields/Enemy.js"
 import Wall from "./Fields/Wall.js"
-import Treasure from "./Fields/Treasure.js"
 import Obstacle from "./Fields/Obstacle.js"
 import Light from "./Fields/Light.js"
 import Plane from "./Fields/Plane.js"
 import Player from "./Player"
-import Model from "./Model"
-import Animation from "./Animation"
-import Player1 from './assets/mm/tris.md2'
-import Player2 from './assets/yoshi/tris.md2'
 
 export default class GameLoader {
 	constructor(scene, manager) {
@@ -30,8 +23,6 @@ export default class GameLoader {
 		this.enemyPlayerData = null;
 		this.enemyPlayer = null;
 		this.manager = manager
-		// this.player.model = null;
-		
 	}
 
 	getGameData() {
@@ -130,15 +121,12 @@ export default class GameLoader {
 		})
 	}
 
-	materializePlayer(manager) {
+	materializePlayer() {
 		// Physically renders player in the game
 
 		console.log("PlayerData game");
 		console.log(this.playerData);
-		this.player = new Player(this.scene, this.playerData, manager)
-		// this.playerX = this.player.mesh.position.x
-		// this.playerZ = this.player.mesh.position.z
-		
+		this.player = new Player(this.scene, this.playerData, this.manager)
 	}
 
 }
